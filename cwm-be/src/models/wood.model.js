@@ -1,24 +1,23 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Equipment extends Model {
+  class Wood extends Model {
     static associate(models) {
-      Equipment.belongsTo(models.Equipment_Status, { foreignKey: "status_id" });
     }
   }
-  Equipment.init(
+  Wood.init(
     {
       name: DataTypes.STRING,
       quantity: DataTypes.INTEGER, // số lượng
-      manufacturing_country: DataTypes.STRING, // nước sản xuất
+      origin: DataTypes.STRING, // nước sản xuất
       unit: DataTypes.STRING, // đơn vị tính nhập chữ
       unit_price: DataTypes.INTEGER, // đơn vị tính nhập chữ
       amount: DataTypes.INTEGER, // đơn vị tính nhập chữ
     },
     {
       sequelize,
-      modelName: "Equipment",
+      modelName: "Wood",
     }
   );
-  return Equipment;
+  return Wood;
 };
