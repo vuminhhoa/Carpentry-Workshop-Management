@@ -17,34 +17,35 @@ exports.create = async (req, res) => {
     await db.sequelize.transaction(async (t) => {
       const equipmentInDB = await db.Equipment.findOne({
         where: {
-          fixed_asset_number: data?.fixed_asset_number,
+          // fixed_asset_number: data?.fixed_asset_number,
+          code: data?.code,
         },
-        // attributes: ['id', 'hash_code', 'serial'],
+        attributes: ["id", "name"],
       });
       if (equipmentInDB)
         return errorHandler(res, err.EQUIPMENT_FIELD_DUPLICATED);
       let equipment;
+      const calculateAmount = Number(data.quantity) * Number(data.unit_price);
       if (data?.image) {
         const result = await cloudinary.uploader.upload(data?.image, {
           folder: "equipment",
         });
         equipment = await db.Equipment.create(
-          { ...data, image: result?.secure_url },
+          {
+            ...data,
+            image: result?.secure_url,
+            amount: calculateAmount,
+            status_id: 1,
+          },
           { transaction: t }
         );
       } else {
-        equipment = await db.Equipment.create(data, { transaction: t });
+        equipment = await db.Equipment.create(
+          { ...data, amount: calculateAmount, status_id: 1 },
+          { transaction: t }
+        );
       }
-      const dataEq = { id: equipment.toJSON().id };
-      const strJson = JSON.stringify(dataEq);
-      qr.toDataURL(strJson, async (err, code) => {
-        if (err) return errorHandler(res, err.EQUIPMENT_NOT_FOUND);
-        const result = await cloudinary.uploader.upload(code, {
-          folder: "equipment_qrcode",
-        });
-        equipment.qrcode = result?.secure_url;
-        await equipment.save();
-      });
+
       return successHandler(res, {}, 201);
     });
   } catch (error) {
@@ -52,21 +53,12 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.detailBasic = async (req, res) => {
+exports.detail = async (req, res) => {
   try {
     const { id } = req?.query;
     const equipment = await db.Equipment.findOne({
       where: { id },
-      attributes: [
-        "id",
-        "name",
-        "code",
-        "model",
-        "serial",
-        "department_id",
-        "status_id",
-      ],
-      include: [{ model: db.Department, attributes: ["id", "name"] }],
+      include: [{ model: db.Equipment_Status, attributes: ["id", "name"] }],
       raw: false,
     });
     return successHandler(res, { equipment }, 200);
@@ -75,7 +67,7 @@ exports.detailBasic = async (req, res) => {
   }
 };
 
-exports.detail = async (req, res) => {
+exports.detailPro = async (req, res) => {
   try {
     const { id } = req?.query;
     const equipment = await db.Equipment.findOne({
@@ -133,33 +125,26 @@ exports.update = async (req, res) => {
         where: { id: data?.id },
       });
       if (!isHas) return errorHandler(res, err.EQUIPMENT_NOT_FOUND);
-      // let orArray = [];
-      // if (data?.code) {
-      //   orArray.push({ code: data?.code });
-      // }
-      // if (data?.serial) {
-      //   orArray.push({ serial: data?.serial });
-      // }
-      // const isDuplicate = await db.Equipment.findOne({
-      //   where: {
-      //     [Op.or]: orArray,
-      //   },
-      //   attributes: ['id', 'code', 'serial'],
-      // });
-      // if (isDuplicate) return errorHandler(res, err.EQUIPMENT_FIELD_DUPLICATED);
+
+      const newAmount =
+        Number(data?.quantity || isHas.quantity) *
+        Number(data?.unit_price || isHas.unit_price);
       if (data?.image) {
         const result = await cloudinary.uploader.upload(data?.image, {
           folder: "equipment",
         });
         await db.Equipment.update(
-          { ...data, image: result?.secure_url },
+          { ...data, image: result?.secure_url, amount: newAmount },
           { where: { id: data?.id }, transaction: t }
         );
       } else {
-        await db.Equipment.update(data, {
-          where: { id: data?.id },
-          transaction: t,
-        });
+        await db.Equipment.update(
+          { ...data, amount: newAmount },
+          {
+            where: { id: data?.id },
+            transaction: t,
+          }
+        );
       }
       return successHandler(res, {}, 201);
     });
@@ -188,33 +173,10 @@ exports.delete = async (req, res) => {
 
 exports.search = async (req, res) => {
   try {
-    let {
-      limit,
-      page,
-      name,
-      department_id,
-      status_id,
-      type_id,
-      risk_level,
-      year_in_use,
-      year_of_manufacture,
-    } = req?.query;
-
-    const { isHasRole, department_id_from_token } = await checkRoleFromToken(
-      req
-    );
-
-    if (!isHasRole) {
-      department_id = department_id_from_token;
-    }
+    let { limit, page, name, status_id } = req?.query;
 
     let filter = {
-      department_id,
       status_id,
-      type_id,
-      risk_level,
-      year_in_use,
-      year_of_manufacture,
     };
 
     if (name) {
@@ -222,25 +184,11 @@ exports.search = async (req, res) => {
         ...filter,
         [Op.or]: [
           { name: { [Op.like]: `%${name}%` } },
-          { model: { [Op.like]: `%${name}%` } },
-          { serial: { [Op.like]: `%${name}%` } },
           { code: { [Op.like]: `%${name}%` } },
         ],
       };
     }
-    let include = [
-      { model: db.Equipment_Type, attributes: ["id", "name"] },
-      { model: db.Equipment_Unit, attributes: ["id", "name"] },
-      { model: db.Equipment_Status, attributes: ["id", "name"] },
-      { model: db.Equipment_Risk_Level, attributes: ["id", "name"] },
-      { model: db.Department, attributes: ["id", "name"] },
-      {
-        model: db.Transfer,
-        limit: 1,
-        attributes: ["transfer_status"],
-        order: [["createdAt", "DESC"]],
-      },
-    ];
+    let include = [{ model: db.Equipment_Status, attributes: ["id", "name"] }];
     let equipments = await getList(+limit, page, filter, "Equipment", include);
     return successHandler(res, { equipments, count: equipments.length }, 200);
   } catch (error) {

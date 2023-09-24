@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   Equipment.init(
     {
       name: DataTypes.STRING,
+      code: DataTypes.STRING,
       quantity: DataTypes.INTEGER, // số lượng
       manufacturing_country: DataTypes.STRING, // nước sản xuất
       unit: DataTypes.STRING, // đơn vị tính nhập chữ

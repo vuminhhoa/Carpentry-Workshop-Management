@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   Timekeeping_Log.init(
     {
-      date: DataTypes.DATE, // đơn vị tính nhập chữ
+      date: DataTypes.DATEONLY,
+      total_carpenter: DataTypes.STRING,
+      total_timekeeping: DataTypes.STRING,
     },
     {
       sequelize,

@@ -2,12 +2,12 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Wood extends Model {
-    static associate(models) {
-    }
+    static associate(models) {}
   }
   Wood.init(
     {
       name: DataTypes.STRING,
+      code: DataTypes.STRING,
       quantity: DataTypes.INTEGER, // số lượng
       origin: DataTypes.STRING, // nước sản xuất
       unit: DataTypes.STRING, // đơn vị tính nhập chữ
