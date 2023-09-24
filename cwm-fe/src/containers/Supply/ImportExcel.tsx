@@ -4,7 +4,7 @@ import { Button, Divider, Form, Input } from 'antd';
 import { toast } from 'react-toastify';
 import * as xlsx from 'xlsx';
 import SupplyImportFileExcel from 'components/SupplyImportFileExcel';
-import supplyApi from 'api/suplly.api';
+import supplyApi from 'api/supply.api';
 
 const ImportSupplyByExcel = () => {
   const [form] = Form.useForm();

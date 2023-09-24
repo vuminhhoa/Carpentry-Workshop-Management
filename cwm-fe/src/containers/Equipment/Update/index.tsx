@@ -1,23 +1,22 @@
-import { ImportOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Divider, Form, Input, Select, Image } from 'antd';
-import { useContext, useEffect, useState } from 'react';
-import ava from 'assets/image.png';
-import { convertBase64, formatCurrency } from 'utils/globalFunc.util';
-import { useNavigate, useParams } from 'react-router-dom';
-import equipmentApi from 'api/equipment.api';
-import { toast } from 'react-toastify';
-import { FilterContext } from 'contexts/filter.context';
-import moment from 'moment';
-import Loading from 'components/Loading';
-import categoryApi from 'api/category.api';
+import { ImportOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Divider, Form, Input, Select, Image } from "antd";
+import { useContext, useEffect, useState } from "react";
+import ava from "assets/image.png";
+import { convertBase64, formatCurrency } from "utils/globalFunc.util";
+import { useNavigate, useParams } from "react-router-dom";
+import equipmentApi from "api/equipment.api";
+import { toast } from "react-toastify";
+import { FilterContext } from "contexts/filter.context";
+import moment from "moment";
+import Loading from "components/Loading";
+import categoryApi from "api/category.api";
 
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = "YYYY/MM/DD";
 const { Option } = Select;
 const { TextArea } = Input;
 
 const UpdateEquipment = () => {
-  const { types, statuses, departments, units, levels, projects, providers } =
-    useContext(FilterContext);
+  const { statuses } = useContext(FilterContext);
 
   const options = (array: any) => {
     return array.map((item: any) => {
@@ -32,8 +31,8 @@ const UpdateEquipment = () => {
   const params: any = useParams();
   const { id } = params;
   const [form] = Form.useForm();
-  const [selectedImage, setSelectedImage] = useState<any>('');
-  const [image, setImage] = useState<any>('');
+  const [selectedImage, setSelectedImage] = useState<any>("");
+  const [image, setImage] = useState<any>("");
   const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [dataChange, setDataChange] = useState<any>({});
@@ -119,10 +118,10 @@ const UpdateEquipment = () => {
       .then((res: any) => {
         const { success } = res.data;
         if (success) {
-          toast.success('Cập nhật thiết bị thành công');
+          toast.success("Cập nhật thiết bị thành công");
           navigate(`/equipment/detail/${equipment.id}`);
         } else {
-          toast.error('Cập nhật thiết bị thất bại');
+          toast.error("Cập nhật thiết bị thất bại");
         }
       })
       .catch()
@@ -175,7 +174,7 @@ const UpdateEquipment = () => {
                 label="Tên thiết bị"
                 name="name"
                 required
-                rules={[{ required: true, message: 'Hãy nhập tên thiết bị!' }]}
+                rules={[{ required: true, message: "Hãy nhập tên thiết bị!" }]}
                 className="mb-5"
               >
                 <Input
@@ -184,31 +183,13 @@ const UpdateEquipment = () => {
                   className="input"
                 />
               </Form.Item>
-              <Form.Item
-                label="Khoa - Phòng"
-                name="department_id"
-                className="mb-5"
-              >
-                <Select
-                  showSearch
-                  placeholder="Chọn khoa phòng"
-                  optionFilterProp="children"
-                  allowClear
-                  filterOption={(input, option) =>
-                    (option!.label as unknown as string)
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={options(departments)}
-                  disabled
-                />
-              </Form.Item>
+
               <Form.Item
                 label="Trạng thái thiết bị"
                 name="status_id"
                 required
                 rules={[
-                  { required: true, message: 'Hãy chọn trạng thái thiết bị!' },
+                  { required: true, message: "Hãy chọn trạng thái thiết bị!" },
                 ]}
                 className="mb-5"
               >
@@ -235,7 +216,7 @@ const UpdateEquipment = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Hãy nhập Số hiệu TSCĐ thiết bị!',
+                    message: "Hãy nhập Số hiệu TSCĐ thiết bị!",
                   },
                 ]}
                 className="mb-5"
@@ -344,7 +325,7 @@ const UpdateEquipment = () => {
                 label="Đơn vị tính"
                 name="unit"
                 required
-                rules={[{ required: true, message: 'Hãy nhập đơn vị tính!' }]}
+                rules={[{ required: true, message: "Hãy nhập đơn vị tính!" }]}
                 className="mb-5"
               >
                 <Input
@@ -740,7 +721,7 @@ const UpdateEquipment = () => {
           <div className="flex flex-col gap-4 items-center basis-1/4 ">
             <div className="text-center leading-9 ">Hình ảnh thiết bị</div>
 
-            {selectedImage === '' ? (
+            {selectedImage === "" ? (
               <img
                 src={image !== null ? image : ava}
                 alt="Hình ảnh thiết bị"

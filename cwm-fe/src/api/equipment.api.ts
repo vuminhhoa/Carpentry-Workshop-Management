@@ -1,9 +1,9 @@
 import axiosClient from "./axiosClient";
-import { CommonResponse } from 'types/common.type';
+import { CommonResponse } from "types/common.type";
 
 const equipmentApi = {
   create(params: object): Promise<CommonResponse> {
-    const url = 'equipment/create';
+    const url = "equipment/create";
     return axiosClient.post(url, params);
   },
   detail(id: number): Promise<CommonResponse> {
@@ -15,17 +15,17 @@ const equipmentApi = {
     return axiosClient.get(url);
   },
   update(params: object): Promise<CommonResponse> {
-    const url = 'equipment/update';
+    const url = "equipment/update";
     return axiosClient.patch(url, params);
   },
   unUseEquipment(params: object): Promise<CommonResponse> {
-    const url = 'equipment/un_use_equipment';
+    const url = "equipment/un_use_equipment";
     return axiosClient.patch(url, params);
   },
   delete(id: number): Promise<CommonResponse> {
-    const url = 'equipment/delete';
+    const url = "equipment/delete";
     return axiosClient.delete(url, {
-      data: { id }
+      data: { id },
     });
   },
   search(params: any): Promise<CommonResponse> {
@@ -39,17 +39,14 @@ const equipmentApi = {
     return axiosClient.get(url);
   },
   uploadExcel(params: any): Promise<CommonResponse> {
-    const url = 'equipment/create_by_excel';
+    const url = "equipment/create_by_excel";
     return axiosClient.post(url, params);
   },
-  statisticDashboard(): Promise<CommonResponse> {
-    const url = 'equipment/statistic_dashboard';
+
+  downloadDocx(): Promise<CommonResponse> {
+    const url = "equipment/download_docx";
     return axiosClient.get(url);
   },
-  downloadDocx(): Promise<CommonResponse> {
-    const url = 'equipment/download_docx';
-    return axiosClient.get(url);
-  }
-}
+};
 
 export default equipmentApi;
