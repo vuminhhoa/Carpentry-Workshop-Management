@@ -13,7 +13,6 @@ const auth = async (req, res, next) => {
         where: {
           email: data?.data?.email,
           id: data?.data?.id,
-          role_id: data?.data?.role_id,
         },
         raw: false,
       });

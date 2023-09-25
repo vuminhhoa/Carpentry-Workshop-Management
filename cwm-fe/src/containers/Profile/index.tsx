@@ -1,22 +1,21 @@
-import { Button, Divider, Form, Input, Select } from 'antd';
-import userApi from 'api/user.api';
-import { FilterContext } from 'contexts/filter.context';
-import { useContext, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { convertBase64, options } from 'utils/globalFunc.util';
-import ava from 'assets/image.png';
-import { CURRENT_USER } from 'constants/auth.constant';
-import Loading from 'components/Loading';
+import { Button, Divider, Form, Input, Select } from "antd";
+import userApi from "api/user.api";
+import { FilterContext } from "contexts/filter.context";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { convertBase64, options } from "utils/globalFunc.util";
+import ava from "assets/image.png";
+import { CURRENT_USER } from "constants/auth.constant";
+import Loading from "components/Loading";
 
 const Profile = () => {
-  const user: any = JSON.parse(localStorage.getItem(CURRENT_USER) || '');
+  const user: any = JSON.parse(localStorage.getItem(CURRENT_USER) || "");
   const { id } = user;
   const [form] = Form.useForm();
-  const [selectedImage, setSelectedImage] = useState<any>('');
-  const [image, setImage] = useState<any>('');
+  const [selectedImage, setSelectedImage] = useState<any>("");
+  const [image, setImage] = useState<any>("");
   const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const { roles, departments } = useContext(FilterContext);
   const [error, setError] = useState<any>();
 
   const handleChangeImg = async (e: any) => {
@@ -48,12 +47,12 @@ const Profile = () => {
             department_id: user?.department_id,
             image: user?.image,
           });
-          setError('');
+          setError("");
           // setUser('');
           setImage(user.image);
         } else {
-          toast.error('Bạn không có quyền truy cập tài khoản này!');
-          setError('Bạn không có quyền truy cập tài khoản này!');
+          toast.error("Bạn không có quyền truy cập tài khoản này!");
+          setError("Bạn không có quyền truy cập tài khoản này!");
         }
       })
       .catch()
@@ -68,9 +67,9 @@ const Profile = () => {
       .then((res) => {
         const { success } = res.data;
         if (success) {
-          toast.success('Cập nhật thông tin thành công!');
+          toast.success("Cập nhật thông tin thành công!");
         } else {
-          toast.error('Cập nhật thông tin thất bại!');
+          toast.error("Cập nhật thông tin thất bại!");
         }
       })
       .catch()
@@ -100,8 +99,8 @@ const Profile = () => {
             size="large"
             onFinish={onFinish}
           >
-            <Form.Item name="id" required style={{ display: 'none' }}>
-              <Input style={{ display: 'none' }} />
+            <Form.Item name="id" required style={{ display: "none" }}>
+              <Input style={{ display: "none" }} />
             </Form.Item>
             <div className="grid grid-cols-2 gap-5">
               <Form.Item
@@ -109,7 +108,7 @@ const Profile = () => {
                 name="name"
                 required
                 rules={[
-                  { required: true, message: 'Hãy nhập tên người dùng!' },
+                  { required: true, message: "Hãy nhập tên người dùng!" },
                 ]}
                 className="mb-5"
               >
@@ -125,8 +124,8 @@ const Profile = () => {
                 className="mb-5"
                 required
                 rules={[
-                  { required: true, message: 'Hãy nhập email!' },
-                  { type: 'email', message: 'Nhập đúng định dạng email' },
+                  { required: true, message: "Hãy nhập email!" },
+                  { type: "email", message: "Nhập đúng định dạng email" },
                 ]}
               >
                 <Input
@@ -138,35 +137,6 @@ const Profile = () => {
               </Form.Item>
             </div>
 
-            <div className="grid grid-cols-2 gap-5">
-              <Form.Item
-                label="Khoa Phòng"
-                name="department_id"
-                // required
-                // rules={[{ required: true, message: 'Hãy chọn Khoa phòng!' }]}
-                className="mb-5"
-              >
-                <Select
-                  placeholder="Chọn Khoa Phòng"
-                  options={options(departments)}
-                  disabled
-                />
-              </Form.Item>
-              <Form.Item
-                label="Chức vụ"
-                name="role_id"
-                required
-                rules={[{ required: true, message: 'Hãy chọn Chức vụ!' }]}
-                className="mb-5"
-              >
-                <Select
-                  style={{ width: '100%' }}
-                  placeholder="Hãy chọn Chức vụ"
-                  options={options(roles)}
-                  disabled
-                />
-              </Form.Item>
-            </div>
             <div className="grid grid-cols-2 gap-5">
               <Form.Item label="Số điện thoại" name="phone" className="mb-5">
                 <Input
@@ -196,7 +166,7 @@ const Profile = () => {
           <div className="flex flex-col gap-4 items-center basis-1/4 ">
             <div className="text-center leading-9 ">Hình ảnh người dùng</div>
 
-            {selectedImage === '' ? (
+            {selectedImage === "" ? (
               <img
                 src={image !== null ? image : ava}
                 alt="Hình ảnh người dùng"

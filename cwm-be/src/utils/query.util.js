@@ -8,6 +8,7 @@ module.exports.getList = async (
   filter,
   model,
   include,
+  order,
   attributes = []
 ) => {
   try {
@@ -23,12 +24,14 @@ module.exports.getList = async (
         where: { ...filter },
         attributes,
         include,
+        order: order,
         raw: false,
       };
     } else {
       query = {
         where: { ...filter },
         include,
+        order: order,
         raw: false,
       };
     }

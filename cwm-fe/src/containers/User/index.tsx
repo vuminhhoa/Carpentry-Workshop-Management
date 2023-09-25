@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext, FC } from 'react';
+import { useEffect, useState, useContext, FC } from "react";
 import {
   DeleteFilled,
   EyeFilled,
   FilterFilled,
   PlusCircleFilled,
   SelectOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -17,23 +17,23 @@ import {
   Select,
   Table,
   Tooltip,
-} from 'antd';
-import useDebounce from 'hooks/useDebounce';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import image from 'assets/image.png';
-import useQuery from 'hooks/useQuery';
-import { toast } from 'react-toastify';
-import userApi from 'api/user.api';
+} from "antd";
+import useDebounce from "hooks/useDebounce";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import image from "assets/image.png";
+import useQuery from "hooks/useQuery";
+import { toast } from "react-toastify";
+import userApi from "api/user.api";
 import {
   checkPermission,
   onChangeCheckbox,
   options,
   resolveDataExcel,
-} from 'utils/globalFunc.util';
-import ExportToExcel from 'components/Excel';
-import { FilterContext } from 'contexts/filter.context';
-import useSearchName from 'hooks/useSearchName';
-import { permissions } from 'constants/permission.constant';
+} from "utils/globalFunc.util";
+import ExportToExcel from "components/Excel";
+import { FilterContext } from "contexts/filter.context";
+import useSearchName from "hooks/useSearchName";
+import { permissions } from "constants/permission.constant";
 
 const limit: number = 10;
 
@@ -58,7 +58,6 @@ const User: FC<IUserProps> = ({
   triggerLoading = false,
 }) => {
   const { onChangeSearch } = useSearchName();
-  const { roles, departments } = useContext(FilterContext);
   const navigate = useNavigate();
   const location = useLocation();
   const pathName: any = location?.pathname;
@@ -84,8 +83,8 @@ const User: FC<IUserProps> = ({
   const [isShowCustomTable, setIsShowCustomTable] = useState<boolean>(false);
   const columns: any = [
     {
-      title: 'Ảnh đại diện',
-      key: 'image',
+      title: "Ảnh đại diện",
+      key: "image",
       show: false,
       widthExcel: 25,
       render: (item: any) => (
@@ -93,50 +92,50 @@ const User: FC<IUserProps> = ({
       ),
     },
     {
-      title: 'Tên hiển thị',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Tên hiển thị",
+      dataIndex: "name",
+      key: "name",
       show: true,
       widthExcel: 25,
     },
     {
-      title: 'Email',
-      key: 'email',
-      dataIndex: 'email',
+      title: "Email",
+      key: "email",
+      dataIndex: "email",
       show: true,
       widthExcel: 30,
     },
     {
-      title: 'Số điện thoại',
-      key: 'phone',
-      dataIndex: 'phone',
+      title: "Số điện thoại",
+      key: "phone",
+      dataIndex: "phone",
       show: true,
       widthExcel: 20,
     },
     {
-      title: 'Địa chỉ',
-      key: 'address',
-      dataIndex: 'address',
+      title: "Địa chỉ",
+      key: "address",
+      dataIndex: "address",
       show: true,
       widthExcel: 25,
     },
     {
-      title: 'Chức vụ',
-      key: 'role_id',
+      title: "Chức vụ",
+      key: "role_id",
       show: true,
       widthExcel: 25,
       render: (item: any) => <>{item?.Role?.name}</>,
     },
     {
-      title: 'Khoa phòng',
-      key: 'department_id',
+      title: "Khoa phòng",
+      key: "department_id",
       show: true,
       widthExcel: 30,
       render: (item: any) => <>{item?.Department?.name}</>,
     },
     {
-      title: 'Tác vụ',
-      key: 'action',
+      title: "Tác vụ",
+      key: "action",
       show: true,
       render: (item: any) => (
         <div>
@@ -144,7 +143,7 @@ const User: FC<IUserProps> = ({
             <Link to={`/user/detail/${item.id}`}>
               <EyeFilled
                 className={
-                  checkPermission(permissions.USER_READ) ? '' : 'hidden'
+                  checkPermission(permissions.USER_READ) ? "" : "hidden"
                 }
               />
             </Link>
@@ -158,7 +157,7 @@ const User: FC<IUserProps> = ({
             >
               <DeleteFilled
                 className={
-                  checkPermission(permissions.USER_DELETE) ? '' : 'hidden'
+                  checkPermission(permissions.USER_DELETE) ? "" : "hidden"
                 }
               />
             </Popconfirm>
@@ -175,7 +174,7 @@ const User: FC<IUserProps> = ({
       .then((res: any) => {
         const { success, message } = res.data;
         if (success) {
-          toast.success('Xóa thành công!');
+          toast.success("Xóa thành công!");
           searchUsers();
         } else {
           toast.error(message);
@@ -225,10 +224,10 @@ const User: FC<IUserProps> = ({
   }, [nameSearch, page, role, department, triggerLoading]);
 
   const onChangeSelect = (key: string, value: any) => {
-    if (key === 'department_id') {
+    if (key === "department_id") {
       setDepartment(value);
     }
-    if (key === 'role_id') {
+    if (key === "role_id") {
       setRole(value);
     }
     let newSearchQuery: any = { ...searchQuery, [`${key}`]: value };
@@ -256,12 +255,12 @@ const User: FC<IUserProps> = ({
     const data = users.map((x: any) => ({
       name: x.name,
       email: x.email,
-      phone: x.phone || '',
-      address: x.address || '',
+      phone: x.phone || "",
+      address: x.address || "",
       role_id: x.Role?.name,
-      department_id: x.Department?.name || '',
+      department_id: x.Department?.name || "",
     }));
-    resolveDataExcel(data, 'Danh sách người dùng', columnTable);
+    resolveDataExcel(data, "Danh sách người dùng", columnTable);
     setLoadingDownload(false);
   };
 
@@ -269,7 +268,7 @@ const User: FC<IUserProps> = ({
     <div>
       <div className="flex-between-center">
         <div className="title">
-          {isDepartment ? 'Danh sách thành viên' : 'DANH SÁCH NGƯỜI DÙNG'}
+          {isDepartment ? "Danh sách thành viên" : "DANH SÁCH NGƯỜI DÙNG"}
         </div>
         <div className="flex flex-row gap-6">
           <ExportToExcel
@@ -279,7 +278,7 @@ const User: FC<IUserProps> = ({
           {checkPermission(permissions.USER_CREATE) && (
             <Button
               className="button_excel"
-              onClick={() => navigate('/user/create_user')}
+              onClick={() => navigate("/user/create_user")}
             >
               <PlusCircleFilled />
               <div className="font-medium text-md text-[#5B69E6]">Thêm mới</div>
@@ -315,38 +314,6 @@ const User: FC<IUserProps> = ({
           </div>
         )}
         <div className="flex-between-center gap-4 p-4">
-          <Select
-            showSearch
-            placeholder="Vai trò"
-            optionFilterProp="children"
-            onChange={(value: any) => onChangeSelect('role_id', value)}
-            // onSearch={onSearch}
-            allowClear
-            filterOption={(input, option) =>
-              (option!.label as unknown as string)
-                .toLowerCase()
-                .includes(input.toLowerCase())
-            }
-            className="select-custom w-1/5"
-            options={options(roles)}
-            value={role}
-          />
-          <Select
-            showSearch
-            placeholder="Khoa Phòng"
-            optionFilterProp="children"
-            onChange={(value: any) => onChangeSelect('department_id', value)}
-            // onSearch={onSearch}
-            allowClear
-            filterOption={(input, option) =>
-              (option!.label as unknown as string)
-                .toLowerCase()
-                .includes(input.toLowerCase())
-            }
-            className={`select-custom w-1/5 ${department_id ? 'hidden' : ''}`}
-            options={options(departments)}
-            value={department}
-          />
           <Input
             placeholder="Tìm kiếm người dùng"
             allowClear

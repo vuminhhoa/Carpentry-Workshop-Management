@@ -247,13 +247,21 @@ module.exports.DEPARTMENT_NOT_FOUND = {
   code: 1028,
   messageCode: "DEPARTMENT_NOT_FOUND",
 };
-module.exports.DEPARTMENT_DUPLICATED = {
+module.exports.TIMEKEEPING_LOG_DUPLICATED = {
   status: 200,
   success: false,
   data: null,
-  message: "Thông tin khoa phòng đã tồn tại trong hệ thống",
+  message: "Bạn đã chấm công ngày này rồi!",
   code: 1029,
-  messageCode: "DEPARTMENT_DUPLICATED",
+  messageCode: "TIMEKEEPING_LOG_DUPLICATED",
+};
+module.exports.CARPENTER_NOT_FOUND = {
+  status: 200,
+  success: false,
+  data: null,
+  message: "Không tìm thấy thợ mộc",
+  code: 1029,
+  messageCode: "CARPENTER_NOT_FOUND",
 };
 module.exports.ROLE_NOT_FOUND = {
   status: 200,
@@ -278,6 +286,14 @@ module.exports.EQUIPMENT_NOT_FOUND = {
   message: "Không tìm thấy thiết bị trên hệ thống",
   code: 1032,
   messageCode: "EQUIPMENT_NOT_FOUND",
+};
+module.exports.TIMEKEEPING_LOG_NOT_FOUND = {
+  status: 500,
+  success: false,
+  data: null,
+  message: "Không tìm thấy ngày chấm công trên hệ thống",
+  code: 1032,
+  messageCode: "TIMEKEEPING_LOG_NOT_FOUND",
 };
 module.exports.RISK_LEVEL_NOT_FOUND = {
   status: 500,

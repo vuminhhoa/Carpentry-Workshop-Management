@@ -60,23 +60,6 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     const user = await db.User.findOne({
       where: { email },
-      include: [
-        {
-          model: db.Role,
-          attributes: ["id", "name"],
-          include: {
-            model: db.Role_Permission,
-            attributes: ["permission_id"],
-            include: {
-              model: db.Permission,
-              attributes: ["name", "display_name"],
-            },
-            raw: false,
-          },
-          raw: false,
-        },
-        { model: db.Department, attributes: ["id", "name"] },
-      ],
       raw: false,
     });
     if (!user) return errorHandler(res, err.EMAIL_NOT_EXIST);

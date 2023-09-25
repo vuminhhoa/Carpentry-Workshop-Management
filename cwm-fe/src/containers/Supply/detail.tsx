@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import image from 'assets/image.png';
 import qrcode from 'assets/qrcode.png';
 import type { ColumnsType } from 'antd/es/table';
-import supplyApi from 'api/suplly.api';
+import supplyApi from 'api/supply.api';
 import moment from 'moment';
 interface DataType {
   key_1: string;
@@ -34,34 +34,34 @@ const columns: ColumnsType<DataType> = [
     title: 'Giá trị',
     dataIndex: 'value_2',
     key: 'value_2',
-  }
+  },
 ];
 
 const Detail = () => {
-
   const params = useParams();
   const { id } = params;
   const [supply, setSupply] = useState<any>({});
 
   const getDetailEquipment = (id: any) => {
-    supplyApi.detail(id)
+    supplyApi
+      .detail(id)
       .then((res: any) => {
         const { success, data } = res.data;
         if (success) {
           setSupply(data.supply);
         }
       })
-      .catch()
-  }
+      .catch();
+  };
 
   useEffect(() => {
     getDetailEquipment(id);
   }, [id]);
 
   const generatorPDF = () => {
-    const element: any = document.getElementById("detail");
-    console.log('element', element)
-  }
+    const element: any = document.getElementById('detail');
+    console.log('element', element);
+  };
 
   const data: DataType[] = [
     {
@@ -90,48 +90,59 @@ const Detail = () => {
     },
     {
       key_1: 'Ngày nhập kho',
-      value_1: `${supply?.warehouse_import_date ? moment(supply?.warehouse_import_date).format("DD-MM-YYYY") : ''}`,
+      value_1: `${
+        supply?.warehouse_import_date
+          ? moment(supply?.warehouse_import_date).format('DD-MM-YYYY')
+          : ''
+      }`,
       key_2: 'Ngày hết hạn bảo hành',
-      value_2: `${supply?.expiration_date ? moment(supply?.expiration_date).format("DD-MM-YYYY") : ''}`,
+      value_2: `${
+        supply?.expiration_date
+          ? moment(supply?.expiration_date).format('DD-MM-YYYY')
+          : ''
+      }`,
     },
-    
-  ]
+  ];
 
   return (
     <div>
       <div className="flex-between-center">
         <div className="font-medium text-lg">HỒ SƠ VẬT TƯ</div>
         <Button
-          type='primary'
+          type="primary"
           className="flex flex-row items-center text-slate-900 gap-2 rounded-3xl border-[#5B69E6] border-2"
         >
           <FilePdfFilled />
           <div
             className="font-medium text-md text-[#5B69E6]"
             onClick={() => generatorPDF()}
-          >Xuất PDF</div>
+          >
+            Xuất PDF
+          </div>
         </Button>
       </div>
       <Divider />
-      <div id='detail' className=''>
-        <div className='flex flex-row gap-6 my-8'>
-          <div className='flex flex-col gap-4 items-center basis-1/3'>
-            <Image
-              src={supply?.image || image}
-              width={300}
-            />
+      <div id="detail" className="">
+        <div className="flex flex-row gap-6 my-8">
+          <div className="flex flex-col gap-4 items-center basis-1/3">
+            <Image src={supply?.image || image} width={300} />
             <div>Ảnh vật tư</div>
           </div>
-          <div className='basis-2/3'>
-            <div className='font-bold text-2xl'>{supply?.name}</div>
-            <div className='mt-4'>
-              <Table columns={columns} dataSource={data} pagination={false} className="shadow-md" />
+          <div className="basis-2/3">
+            <div className="font-bold text-2xl">{supply?.name}</div>
+            <div className="mt-4">
+              <Table
+                columns={columns}
+                dataSource={data}
+                pagination={false}
+                className="shadow-md"
+              />
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Detail
+export default Detail;

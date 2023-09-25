@@ -1,10 +1,19 @@
 import { useContext, useEffect, useState } from 'react';
 import {
-  FileExcelFilled, FilterFilled, SelectOutlined, ImportOutlined
+  FileExcelFilled,
+  FilterFilled,
+  SelectOutlined,
+  ImportOutlined,
 } from '@ant-design/icons';
 import {
-  Button, Divider, Input, Checkbox,
-  Select, Table, Row, Pagination,
+  Button,
+  Divider,
+  Input,
+  Checkbox,
+  Select,
+  Table,
+  Row,
+  Pagination,
 } from 'antd';
 import useDebounce from 'hooks/useDebounce';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -12,27 +21,26 @@ import image from 'assets/image.png';
 import useQuery from 'hooks/useQuery';
 import { FilterContext } from 'contexts/filter.context';
 import { onChangeCheckbox, options } from 'utils/globalFunc.util';
-import supplyApi from 'api/suplly.api';
+import supplyApi from 'api/supply.api';
 import useSearchName from 'hooks/useSearchName';
 
 const limit: number = 10;
 
 const TableFooter = ({ paginationProps }: any) => {
   return (
-    <Row justify='space-between'>
+    <Row justify="space-between">
       <div></div>
       <Pagination {...paginationProps} />
     </Row>
-  )
-}
+  );
+};
 
 const ListEqCorresponding = () => {
-
   const { onChangeSearch } = useSearchName();
   const params: any = useParams();
   const { id } = params;
   const navigate = useNavigate();
-  const { statuses, departments, levels, types } = useContext(FilterContext);
+  const { statuses } = useContext(FilterContext);
   const [equipments, setEquipments] = useState<any>([]);
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState<any>({});
@@ -64,49 +72,45 @@ const ListEqCorresponding = () => {
       show: false,
       render(item: any) {
         return (
-          <img src={item?.Equipment?.image || image} alt="logo" className='w-32 h-32' />
+          <img
+            src={item?.Equipment?.image || image}
+            alt="logo"
+            className="w-32 h-32"
+          />
         );
-      }
+      },
     },
     {
       title: 'Mã thiết bị',
       key: 'code',
       show: true,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.code}</>
-        );
-      }
+        return <>{item?.Equipment?.code}</>;
+      },
     },
     {
       title: 'Tên thiết bị',
       key: 'name',
       show: true,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.name}</>
-        );
-      }
+        return <>{item?.Equipment?.name}</>;
+      },
     },
     {
       title: 'Model',
       key: 'model',
       show: true,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.model}</>
-        );
-      }
+        return <>{item?.Equipment?.model}</>;
+      },
     },
     {
       title: 'Serial',
       key: 'serial',
       show: true,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.serial}</>
-        );
-      }
+        return <>{item?.Equipment?.serial}</>;
+      },
     },
     {
       title: 'Trạng thái',
@@ -114,100 +118,82 @@ const ListEqCorresponding = () => {
       show: true,
       render: (item: any) => (
         <div>{item?.Equipment?.Equipment_Status?.name}</div>
-      )
+      ),
     },
     {
       title: 'Loại thiết bị',
       key: 'type',
       show: true,
-      render: (item: any) => (
-        <div>{item?.Equipment?.Equipment_Type?.name}</div>
-      )
+      render: (item: any) => <div>{item?.Equipment?.Equipment_Type?.name}</div>,
     },
     {
       title: 'Đơn vị tính',
       key: 'unit',
       show: true,
-      render: (item: any) => (
-        <div>{item?.Equipment?.Equipment_Unit?.name}</div>
-      )
+      render: (item: any) => <div>{item?.Equipment?.Equipment_Unit?.name}</div>,
     },
     {
       title: 'Khoa - Phòng',
       key: 'room',
       show: true,
-      render: (item: any) => (
-        <div>{item?.Equipment?.Department?.name}</div>
-      )
+      render: (item: any) => <div>{item?.Equipment?.Department?.name}</div>,
     },
     {
-      title: "Mức độ rủi ro",
-      key: "risk_level",
+      title: 'Mức độ rủi ro',
+      key: 'risk_level',
       show: true,
       render: (item: any) => (
         <div>{item?.Equipment?.Equipment_Risk_Level?.name}</div>
-      )
+      ),
     },
     {
-      title: "Hãng sản xuất",
-      key: "manufacturer_id",
+      title: 'Hãng sản xuất',
+      key: 'manufacturer_id',
       show: false,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.manufacturer_id}</>
-        );
-      }
+        return <>{item?.Equipment?.manufacturer_id}</>;
+      },
     },
     {
-      title: "Xuất sứ",
-      key: "manufacturing_country_id",
+      title: 'Xuất sứ',
+      key: 'manufacturing_country_id',
       show: false,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.manufacturing_country_id}</>
-        );
-      }
+        return <>{item?.Equipment?.manufacturing_country_id}</>;
+      },
     },
     {
-      title: "Năm sản xuất",
-      key: "year_of_manufacture",
+      title: 'Năm sản xuất',
+      key: 'year_of_manufacture',
       show: false,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.year_of_manufacture}</>
-        );
-      }
+        return <>{item?.Equipment?.year_of_manufacture}</>;
+      },
     },
     {
-      title: "Năm sử dụng",
-      key: "year_in_use",
+      title: 'Năm sử dụng',
+      key: 'year_in_use',
       show: true,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.year_in_use}</>
-        );
-      }
+        return <>{item?.Equipment?.year_in_use}</>;
+      },
     },
     {
-      title: "Giá trị ban đầu",
-      key: "initial_value",
+      title: 'Giá trị ban đầu',
+      key: 'initial_value',
       show: false,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.initial_value}</>
-        );
-      }
+        return <>{item?.Equipment?.initial_value}</>;
+      },
     },
     {
-      title: "Khấu hao hàng năm",
-      key: "annual_depreciation",
+      title: 'Khấu hao hàng năm',
+      key: 'annual_depreciation',
       show: false,
       render(item: any) {
-        return (
-          <>{item?.Equipment?.annual_depreciation}</>
-        );
-      }
-    }
+        return <>{item?.Equipment?.annual_depreciation}</>;
+      },
+    },
   ];
 
   const [columnTable, setColumnTable] = useState<any>(columns);
@@ -218,7 +204,7 @@ const ListEqCorresponding = () => {
     setSearchQuery(newSearchQuery);
     searchQueryString = new URLSearchParams(newSearchQuery).toString();
     navigate(`${pathName}?${searchQueryString}`);
-  }
+  };
 
   const pagination = {
     current: page,
@@ -226,19 +212,20 @@ const ListEqCorresponding = () => {
     pageSize: limit,
     showTotal: (total: number) => `Tổng cộng: ${total} thiết bị`,
     onChange: onPaginationChange,
-  }
+  };
 
   const getEquipements = () => {
     setLoading(true);
-    supplyApi.listEqCorresponding({
-      page, 
-      name, 
-      status_id: status, 
-      type_id: type, 
-      department_id: department, 
-      risk_level: level, 
-      supply_id: id
-    })
+    supplyApi
+      .listEqCorresponding({
+        page,
+        name,
+        status_id: status,
+        type_id: type,
+        department_id: department,
+        risk_level: level,
+        supply_id: id,
+      })
       .then((res: any) => {
         const { success, data } = res.data;
         if (success) {
@@ -247,12 +234,12 @@ const ListEqCorresponding = () => {
         }
       })
       .catch()
-      .finally(() => setLoading(false))
-  }
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    getEquipements()
-  }, [nameSearch, status, type, department, level, page, id])
+    getEquipements();
+  }, [nameSearch, status, type, department, level, page, id]);
 
   const onChangeSelect = (key: string, value: any) => {
     if (key === 'status_id') {
@@ -279,7 +266,7 @@ const ListEqCorresponding = () => {
       setPage(1);
       navigate(`${pathName}?page=1`);
     }
-  }
+  };
 
   const onSearch = (value: string) => {
     console.log('search:', value);
@@ -289,16 +276,14 @@ const ListEqCorresponding = () => {
     <div>
       <div className="flex-between-center">
         <div className="title">DANH SÁCH THIẾT BỊ TƯƠNG ỨNG VỚI VẬT TƯ</div>
-        <div className='flex flex-row gap-6'>
-          <Button
-            className="flex-center text-slate-900 gap-2 rounded-3xl border-[#5B69E6] border-2"
-          >
+        <div className="flex flex-row gap-6">
+          <Button className="flex-center text-slate-900 gap-2 rounded-3xl border-[#5B69E6] border-2">
             <FileExcelFilled />
             <div className="font-medium text-md text-[#5B69E6]">Xuất Excel</div>
           </Button>
           <Button
             className="flex-center text-slate-900 gap-2 rounded-3xl border-[#5B69E6] border-2"
-            onClick={() => navigate("/equipment/import_excel_eq")}
+            onClick={() => navigate('/equipment/import_excel_eq')}
           >
             <ImportOutlined />
             <div className="font-medium text-md text-[#5B69E6]">Nhập Excel</div>
@@ -308,28 +293,30 @@ const ListEqCorresponding = () => {
       <Divider />
       <div className="flex justify-between flex-col">
         <div
-          className='flex flex-row gap-4 items-center mb-4'
+          className="flex flex-row gap-4 items-center mb-4"
           onClick={() => setIsShowCustomTable(!isShowCustomTable)}
         >
           <SelectOutlined />
-          <div className='font-medium text-center cursor-pointer text-base'>Tùy chọn trường hiển thị</div>
+          <div className="font-medium text-center cursor-pointer text-base">
+            Tùy chọn trường hiển thị
+          </div>
         </div>
-        {
-          isShowCustomTable &&
-          <div className='flex flex-row gap-4'>
-            {
-              columnTable.length > 0 && columnTable.map((item: any) => (
+        {isShowCustomTable && (
+          <div className="flex flex-row gap-4">
+            {columnTable.length > 0 &&
+              columnTable.map((item: any) => (
                 <div>
                   <Checkbox
                     defaultChecked={item?.show}
-                    onChange={(e: any) => onChangeCheckbox(item, e, columnTable, setColumnTable)}
+                    onChange={(e: any) =>
+                      onChangeCheckbox(item, e, columnTable, setColumnTable)
+                    }
                   />
                   <div>{item?.title}</div>
                 </div>
-              ))
-            }
+              ))}
           </div>
-        }
+        )}
         <div className="flex-between-center gap-4 p-4">
           <Select
             showSearch
@@ -339,55 +326,29 @@ const ListEqCorresponding = () => {
             onSearch={onSearch}
             allowClear
             filterOption={(input, option) =>
-              (option!.label as unknown as string).toLowerCase().includes(input.toLowerCase())
+              (option!.label as unknown as string)
+                .toLowerCase()
+                .includes(input.toLowerCase())
             }
             className="select-custom"
             options={options(statuses)}
             value={status}
           />
-          <Select
-            showSearch
-            placeholder="Khoa - Phòng"
-            optionFilterProp="children"
-            onChange={(value: any) => onChangeSelect('department_id', value)}
-            onSearch={onSearch}
-            allowClear
-            options={options(departments)}
-            value={department}
-          />
-          <Select
-            showSearch
-            placeholder="Mức độ rủi ro"
-            optionFilterProp="children"
-            onChange={(value: any) => onChangeSelect('risk_level', value)}
-            onSearch={onSearch}
-            allowClear
-            filterOption={(input, option) =>
-              (option!.label as unknown as string).toLowerCase().includes(input.toLowerCase())
-            }
-            options={options(levels)}
-            value={level}
-          />
 
-          <Select
-            showSearch
-            placeholder="Loại thiết bị"
-            optionFilterProp="children"
-            onChange={(value: any) => onChangeSelect('type_id', value)}
-            onSearch={onSearch}
-            allowClear
-            filterOption={(input, option) =>
-              (option!.label as unknown as string).toLowerCase().includes(input.toLowerCase())
-            }
-            options={options(types)}
-            value={type}
-          />
           <Input
-            placeholder='Tìm kiếm thiết bị'
+            placeholder="Tìm kiếm thiết bị"
             allowClear
             value={name}
             className="input"
-            onChange={(e) => onChangeSearch(e, setName, searchQuery, setSearchQuery, searchQueryString)}
+            onChange={(e) =>
+              onChangeSearch(
+                e,
+                setName,
+                searchQuery,
+                setSearchQuery,
+                searchQueryString
+              )
+            }
           />
           <div>
             <FilterFilled />
@@ -402,8 +363,8 @@ const ListEqCorresponding = () => {
         pagination={false}
         loading={loading}
       />
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default ListEqCorresponding
+export default ListEqCorresponding;

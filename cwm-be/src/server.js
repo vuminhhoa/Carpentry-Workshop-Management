@@ -55,9 +55,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "MDM API",
+      title: "CWM API",
       version: "1.0.0",
-      description: "Document MDM API",
+      description: "Document CWM API",
     },
     servers: [
       {

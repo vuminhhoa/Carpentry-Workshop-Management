@@ -16,19 +16,6 @@ exports.detail = async (req, res) => {
       attributes: {
         exclude: ["password"],
       },
-      include: [
-        {
-          model: db.Role,
-          attributes: ["id", "name"],
-          include: [
-            {
-              model: db.Role_Permission,
-              attributes: ["permission_id"],
-            },
-          ],
-        },
-        { model: db.Department, attributes: ["id", "name"] },
-      ],
       raw: false,
     });
     return successHandler(res, { user }, 200);
@@ -48,10 +35,6 @@ exports.getProfile = async (req, res) => {
       attributes: {
         exclude: ["password"],
       },
-      include: [
-        { model: db.Role, attributes: ["id", "name"] },
-        { model: db.Department, attributes: ["id", "name"] },
-      ],
       raw: false,
     });
     return successHandler(res, { user }, 200);
@@ -177,8 +160,8 @@ exports.delete = async (req, res) => {
 
 exports.search = async (req, res) => {
   try {
-    let { limit = 10, page, keyword, role_id, department_id } = req?.query;
-    let filter = { role_id, department_id };
+    let { limit = 10, page, keyword } = req?.query;
+    let filter = {};
     if (keyword) {
       filter = {
         ...filter,
@@ -189,10 +172,7 @@ exports.search = async (req, res) => {
         ],
       };
     }
-    let include = [
-      { model: db.Role, attributes: ["id", "name"] },
-      { model: db.Department, attributes: ["id", "name"] },
-    ];
+    let include = [];
     let users = await getList(limit, page, filter, "User", include);
     return successHandler(res, { users, count: users.length }, 200);
   } catch (error) {

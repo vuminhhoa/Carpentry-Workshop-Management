@@ -5,15 +5,12 @@ const authMiddleware = require("../midlewares/auth.middleware");
 const permissionMiddleware = require("../midlewares/permission.middleware");
 const roleMiddleware = require("../midlewares/role.middleware");
 
-router.post(
-  "/create",
-  authMiddleware,
-  roleMiddleware.isAdmin,
-  supplyController.create
-);
+router.post("/create", authMiddleware, supplyController.create);
+router.patch("/update", authMiddleware, supplyController.update);
 router.get("/list", authMiddleware, supplyController.list);
 router.get("/detail", authMiddleware, supplyController.detail);
-// router.delete("/delete", authMiddleware, roleMiddleware.isAdmin, supplyController.delete);
+router.delete("/delete", authMiddleware, supplyController.delete);
+router.get("/search", authMiddleware, supplyController.search);
 router.post(
   "/import_supply_for_equipment",
   authMiddleware,

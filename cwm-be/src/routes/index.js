@@ -1,26 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const authRoute = require("./auth.route");
-const roleRoute = require("./role.route");
 const equipmentRoute = require("./equipment.route");
-const equipmentHandoverRoute = require("./equipement_handover.route");
-const equipmentRepairRoute = require("./equipment_repair.route");
-const equipmentLiquidationRoute = require("./equipment_liquidation.route");
-const equipmentTransferRoute = require("./equipment_transfer.route");
-const equipmentMaintenanceRoute = require("./equipment_maintenance.route");
-const equipmentInventoryRoute = require("./equipment_inventory.route");
-const supplyAccompanyRoute = require("./supply_accompany.route");
 const supplyRoute = require("./supply.route");
-const permissionRoute = require("./permission.route");
-const departmentRoute = require("./department.route");
+const carpenterRoute = require("./carpenter.route");
+const orderRoute = require("./order.route");
+const productRoute = require("./product.route");
+const woodRoute = require("./wood.route");
+const timekeepingLogRoute = require("./timekeeping_log.route");
 const providerRoute = require("./provider.route");
-const serviceRoute = require("./service.route");
 const categoryRoute = require("./category.route");
-const notificationRoute = require("./notification.route");
 const userRoute = require("./user.route");
 const docsRoute = require("./docs.route");
-const equipmentInspectionRoute = require("./equipment_inspection.route");
-const projectRoute = require("./project.route");
 
 const defaultRoutes = [
   {
@@ -28,80 +19,49 @@ const defaultRoutes = [
     route: authRoute,
   },
   {
-    path: "/role",
-    route: roleRoute,
+    path: "/carpenter",
+    route: carpenterRoute,
   },
   {
-    path: "/permission",
-    route: permissionRoute,
+    path: "/order",
+    route: orderRoute,
   },
+  {
+    path: "/product",
+    route: productRoute,
+  },
+  {
+    path: "/wood",
+    route: woodRoute,
+  },
+  {
+    path: "/timekeeping_log",
+    route: timekeepingLogRoute,
+  },
+
   {
     path: "/equipment",
     route: equipmentRoute,
   },
+
   {
-    path: "/equipment_handover",
-    route: equipmentHandoverRoute,
-  },
-  {
-    path: "/equipment_repair",
-    route: equipmentRepairRoute,
-  },
-  {
-    path: "/equipment_liquidation",
-    route: equipmentLiquidationRoute,
-  },
-  {
-    path: "/equipment_transfer",
-    route: equipmentTransferRoute,
-  },
-  {
-    path: "/equipment_inspection",
-    route: equipmentInspectionRoute,
-  },
-  {
-    path: "/equipment_maintenance",
-    route: equipmentMaintenanceRoute,
-  },
-  {
-    path: "/equipment_inventory",
-    route: equipmentInventoryRoute,
-  },
-  {
-    path: "/supplies",
+    path: "/supply",
     route: supplyRoute,
   },
-  {
-    path: "/department",
-    route: departmentRoute,
-  },
+
   {
     path: "/provider",
     route: providerRoute,
   },
-  {
-    path: "/service",
-    route: serviceRoute,
-  },
+
   {
     path: "/category",
     route: categoryRoute,
   },
-  {
-    path: "/notification",
-    route: notificationRoute,
-  },
+
   {
     path: "/user",
     route: userRoute,
-  },
-  {
-    path: "/project",
-    route: projectRoute,
-  },
-  {
-    path: "/supply_accompany",
-    route: supplyAccompanyRoute,
   },
 ];
 
