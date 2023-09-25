@@ -11,6 +11,15 @@ const { sequelize } = require("../models");
 const { sendUnuseEquipmentEmail } = require("../utils/sendEmail.util");
 
 //Equipment Controller
+exports.listEquipmentStatuses = async (req, res) => {
+  try {
+    const statuses = await db.Equipment_Status.findAll({});
+    return successHandler(res, { statuses }, 200);
+  } catch (error) {
+    return errorHandler(res, error);
+  }
+};
+
 exports.create = async (req, res) => {
   try {
     const data = req?.body;

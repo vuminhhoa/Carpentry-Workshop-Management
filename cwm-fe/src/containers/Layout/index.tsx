@@ -41,8 +41,6 @@ const LayoutSystem = (props: LayoutProps) => {
     useState<boolean>(false);
   const user: any = JSON.parse(localStorage.getItem(CURRENT_USER) || '');
 
-  console.log(user);
-
   const getUserImage = () => {
     userApi
       .getProfile(user.id)
@@ -135,7 +133,6 @@ const LayoutSystem = (props: LayoutProps) => {
     getUserImage();
   }, [user.id]);
 
-  console.log(pathName[0]);
   return (
     <Layout>
       <Header className="bg-white  px-4  flex flex-row items-center justify-between ">

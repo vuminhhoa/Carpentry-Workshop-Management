@@ -8,5 +8,10 @@ router.post("/create", authMiddleware, equipmentController.create);
 router.patch("/update", authMiddleware, equipmentController.update);
 router.delete("/delete", authMiddleware, equipmentController.delete);
 router.get("/search", authMiddleware, equipmentController.search);
+router.get(
+  "/status/list",
+  authMiddleware,
+  equipmentController.listEquipmentStatuses
+);
 
 module.exports = router;

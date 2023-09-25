@@ -1,6 +1,6 @@
-import React, { createContext, useEffect, useState } from "react";
-import filterApi from "api/filter.api";
-import { ACCESS_TOKEN, CURRENT_USER } from "constants/auth.constant";
+import React, { createContext, useEffect, useState } from 'react';
+import filterApi from 'api/filter.api';
+import { ACCESS_TOKEN, CURRENT_USER } from 'constants/auth.constant';
 
 interface FilterContextData {
   statuses: Array<object>[];
@@ -20,7 +20,7 @@ const FilterContextProvider: React.FC<FilterContextProps> = ({ children }) => {
   const [statuses, setStatuses] = useState([]);
 
   const access_token: any = localStorage.getItem(ACCESS_TOKEN);
-  const user: any = JSON.parse(localStorage.getItem(CURRENT_USER) || "{}");
+  const user: any = JSON.parse(localStorage.getItem(CURRENT_USER) || '{}');
 
   const getAllFilter = async () => {
     await Promise.all([filterApi.getStatusEquipmentApi()])
@@ -28,7 +28,7 @@ const FilterContextProvider: React.FC<FilterContextProps> = ({ children }) => {
         const [statuses] = res;
         setStatuses(statuses?.data?.data?.statuses);
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const FilterContextProvider: React.FC<FilterContextProps> = ({ children }) => {
     statuses,
     user,
   };
-
+  console.log(statuses);
   return (
     <FilterContext.Provider value={FilterContextData}>
       {children}

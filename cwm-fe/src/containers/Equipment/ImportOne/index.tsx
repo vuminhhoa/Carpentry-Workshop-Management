@@ -5,6 +5,7 @@ import { convertBase64, options } from 'utils/globalFunc.util';
 import equipmentApi from 'api/equipment.api';
 import { toast } from 'react-toastify';
 import { FilterContext } from 'contexts/filter.context';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -17,6 +18,7 @@ const ImportOne = () => {
   const [type, setType] = useState({});
   const [loading, setLoading] = useState<boolean>(false);
   const [dataChange, setDataChange] = useState<any>({});
+  const navigate = useNavigate();
 
   const handleChangeImg = async (e: any) => {
     let file = e.target.files[0];
@@ -45,6 +47,7 @@ const ImportOne = () => {
           setImage('');
           setSelectedImage('');
           form.resetFields();
+          navigate(`/equipments/list_equipments`);
         } else {
           toast.error(message);
         }
@@ -69,7 +72,7 @@ const ImportOne = () => {
           onFinish={onFinish}
           onChange={onchange}
         >
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 gap-5">
             <Form.Item
               label="Tên thiết bị"
               name="name"
@@ -84,66 +87,39 @@ const ImportOne = () => {
               />
             </Form.Item>
 
-            {/* <Form.Item label="Trạng thái thiết bị" className="mb-5">
-              <Input
-                className="input"
-                defaultValue={
-                  options(statuses).find((item: any) => item.value === 2).label
-                }
-                disabled
-              />
-            </Form.Item> */}
-          </div>
-
-          <div className="grid grid-cols-4 gap-5">
             <Form.Item
-              label="Số hiệu TSCĐ"
-              name="fixed_asset_number"
+              label="Mã thiết bị"
+              className="mb-5"
+              name="code"
               required
-              rules={[
-                {
-                  required: true,
-                  message: 'Hãy nhập Số hiệu TSCĐ thiết bị!',
-                },
-              ]}
-              className="mb-5"
-            >
-              <Input placeholder="Nhập mã TSCĐ" allowClear className="input" />
-            </Form.Item>
-            <Form.Item label="Model" name="model" className="mb-5">
-              <Input
-                placeholder="Nhập model của thiết bị"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-            <Form.Item label="Serial" name="serial" className="mb-5">
-              <Input
-                placeholder="Nhập serial của thiết bị"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-            <Form.Item
-              label="Mã hóa thiết bị"
-              name="hash_code"
-              className="mb-5"
+              rules={[{ required: true, message: 'Hãy nhập tên thiết bị!' }]}
             >
               <Input
-                placeholder="Nhập mã hoá thiết bị"
+                placeholder="Nhập mã thiết bị"
                 allowClear
                 className="input"
               />
             </Form.Item>
           </div>
 
-          <div className="grid grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 gap-5">
             <Form.Item
-              label="Đơn vị tính"
+              label="Nước sản suất"
+              name="manufacturing_country"
+              className="mb-5"
+            >
+              <Input
+                placeholder="Nhập nước sản xuất"
+                allowClear
+                className="input"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Đơn vị tính "
               name="unit"
+              className="mb-5"
               required
               rules={[{ required: true, message: 'Hãy nhập đơn vị tính!' }]}
-              className="mb-5"
             >
               <Input
                 placeholder="Nhập đơn vị tính"
@@ -151,64 +127,30 @@ const ImportOne = () => {
                 className="input"
               />
             </Form.Item>
+          </div>
 
-            <Form.Item label="Năm sử dụng" name="year_in_use" className="mb-5">
-              <Input
-                placeholder="Nhập năm sử dụng của thiết bị"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
+          <div className="grid grid-cols-2 gap-5">
             <Form.Item
-              label="Nước sản xuất"
-              name="manufacturing_country_id"
+              label="Số lượng"
+              name="quantity"
+              required
+              rules={[{ required: true, message: 'Hãy nhập số lượng!' }]}
               className="mb-5"
             >
-              <Input
-                placeholder="Nhập xuất sứ của thiết bị"
-                allowClear
-                className="input"
-              />
+              <Input placeholder="Nhập số lượng" allowClear className="input" />
+            </Form.Item>
+
+            <Form.Item
+              label="Đơn giá"
+              name="unit_price"
+              className="mb-5"
+              required
+              rules={[{ required: true, message: 'Hãy nhập đơn giá!' }]}
+            >
+              <Input placeholder="Nhập đơn giá" allowClear className="input" />
             </Form.Item>
           </div>
 
-          <div className="grid grid-cols-4 gap-5">
-            <Form.Item label="Thành tiền" name="initial_value" className="mb-5">
-              <Input
-                placeholder="Nhập thành tiền thiết bị"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-            <Form.Item
-              label="Khấu hao hàng năm (%)"
-              name="annual_depreciation"
-              className="mb-5"
-            >
-              <Input
-                placeholder="Nhập Khấu hao hàng năm"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-            <Form.Item
-              label="Giá trị còn lại"
-              name="residual_value"
-              className="mb-5"
-            >
-              <Input
-                placeholder="Nhập giá trị còn lại"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-          </div>
-
-          <div className="grid grid-cols-1 gap-5">
-            <Form.Item label="Ghi chú" name="note" className="mb-5">
-              <TextArea placeholder="Ghi chú" rows={4} className="textarea" />
-            </Form.Item>
-          </div>
           <Form.Item>
             <Button
               className="button-primary"

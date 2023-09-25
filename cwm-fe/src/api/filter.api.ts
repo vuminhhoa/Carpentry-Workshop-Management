@@ -3,7 +3,7 @@ import { CommonResponse } from 'types/common.type';
 
 const filterApi = {
   getStatusEquipmentApi(): Promise<CommonResponse> {
-    const url = 'category/status/list';
+    const url = 'equipment/status/list';
     return axiosClient.get(url);
   },
   getGroupEquipmentApi(): Promise<CommonResponse> {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from 'react';
 import {
   DeleteFilled,
   EditFilled,
@@ -6,7 +6,7 @@ import {
   FilterFilled,
   SelectOutlined,
   ImportOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   Button,
   Divider,
@@ -20,26 +20,25 @@ import {
   Tooltip,
   Checkbox,
   Space,
-} from "antd";
-import useDebounce from "hooks/useDebounce";
-import "./index.css";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import equipmentApi from "api/equipment.api";
-import useQuery from "hooks/useQuery";
-import { toast } from "react-toastify";
-import { FilterContext } from "contexts/filter.context";
-import { NotificationContext } from "contexts/notification.context";
+} from 'antd';
+import useDebounce from 'hooks/useDebounce';
+import './index.css';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import equipmentApi from 'api/equipment.api';
+import useQuery from 'hooks/useQuery';
+import { toast } from 'react-toastify';
+import { FilterContext } from 'contexts/filter.context';
+import { NotificationContext } from 'contexts/notification.context';
 import {
-  checkRoleFromData,
   getCurrentUser,
   onChangeCheckbox,
   options,
   resolveDataExcel,
-} from "utils/globalFunc.util";
-import useSearchName from "hooks/useSearchName";
-import ExportToExcel from "components/Excel";
-import type { PaginationProps } from "antd";
-import { formatCurrency } from "utils/globalFunc.util";
+} from 'utils/globalFunc.util';
+import useSearchName from 'hooks/useSearchName';
+import ExportToExcel from 'components/Excel';
+import type { PaginationProps } from 'antd';
+import { formatCurrency } from 'utils/globalFunc.util';
 
 const TableFooter = ({ paginationProps }: any) => {
   return (
@@ -79,15 +78,9 @@ const List = () => {
   const [department, setDepartment] = useState<any>(currentDepartment);
   const [type, setType] = useState<any>(currentType);
   const [level, setLevel] = useState<any>(currentRiskLevel);
-  const [showHandoverModal, setShowHandoverModal] = useState<boolean>(false);
-  const [showReportModal, setShowReportModal] = useState<boolean>(false);
-  const [showTransferModal, setShowTransferModal] = useState<boolean>(false);
   const [isShowCustomTable, setIsShowCustomTable] = useState<boolean>(false);
-  const [dataHandover, setDataHandover] = useState<any>({});
-  const [dataReport, setDataReport] = useState<any>({});
-  const [dataTransfer, setDataTransfer] = useState<any>({});
 
-  const onShowSizeChange: PaginationProps["onShowSizeChange"] = (
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (
     current,
     pageSize
   ) => {
@@ -96,49 +89,49 @@ const List = () => {
 
   const columns: any = [
     {
-      title: "Tên thiết bị",
-      dataIndex: "name",
-      key: "name",
+      title: 'Tên thiết bị',
+      dataIndex: 'name',
+      key: 'name',
       show: true,
       widthExcel: 30,
     },
 
     {
-      title: "Nước sản xuất",
-      key: "manufacturing_country",
+      title: 'Nước sản xuất',
+      key: 'manufacturing_country',
       show: true,
-      dataIndex: "manufacturing_country",
+      dataIndex: 'manufacturing_country',
       widthExcel: 30,
     },
 
     {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
       show: true,
       widthExcel: 30,
     },
 
     {
-      title: "Đơn vị tính",
-      key: "unit",
+      title: 'Đơn vị tính',
+      key: 'unit',
       show: true,
-      dataIndex: "unit",
+      dataIndex: 'unit',
       widthExcel: 30,
     },
     {
-      title: "Đơn giá",
-      key: "unit_price",
+      title: 'Đơn giá',
+      key: 'unit_price',
       show: true,
-      dataIndex: "unit_price",
+      dataIndex: 'unit_price',
       widthExcel: 30,
       render: (item: number) => <div>{formatCurrency(item)}</div>,
     },
     {
-      title: "Thành tiền",
-      key: "amount",
+      title: 'Thành tiền',
+      key: 'amount',
       show: true,
-      dataIndex: "amount",
+      dataIndex: 'amount',
       widthExcel: 30,
       render: (item: number) => <div>{formatCurrency(item)}</div>,
     },
@@ -146,8 +139,8 @@ const List = () => {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     {
-      title: "Trạng thái",
-      key: "status_id",
+      title: 'Trạng thái',
+      key: 'status_id',
       show: true,
       render: (item: any) => <div>{item?.Equipment_Status?.name}</div>,
       widthExcel: 30,
@@ -156,22 +149,22 @@ const List = () => {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     {
-      title: "Tác vụ",
-      key: "action",
+      title: 'Tác vụ',
+      key: 'action',
       show: true,
       render: (item: any) => (
         <Menu className="flex flex-row items-center place-content-center">
           <Space>
             <Menu.Item key="detail">
               <Tooltip title="Hồ sơ thiết bị">
-                <Link to={`/equipment/detail/${item.id}`}>
+                <Link to={`/equipments/detail_equipment/${item.id}`}>
                   <EyeFilled />
                 </Link>
               </Tooltip>
             </Menu.Item>
             <Menu.Item key="update_equipment">
               <Tooltip title="Cập nhật thiết bị">
-                <Link to={`/equipment/update/${item.id}`}>
+                <Link to={`/equipments/update_equipment/${item.id}`}>
                   <EditFilled />
                 </Link>
               </Tooltip>
@@ -199,41 +192,6 @@ const List = () => {
 
   const [columnTable, setColumnTable] = useState<any>(columns);
   const current_user: any = getCurrentUser();
-  const sender_id: number = current_user?.id;
-  const current_username = current_user?.name;
-  const isHasRole: boolean = checkRoleFromData();
-
-  const setHandoverFields = (item: any) => {
-    setDataHandover({
-      name: item.name,
-      equipment_id: item.id,
-      handover_create_id: current_user?.id,
-    });
-    setShowHandoverModal(true);
-  };
-
-  const setReportFields = (item: any) => {
-    setShowReportModal(true);
-    setDataReport({
-      name: item.name,
-      equipment_id: item.id,
-      department_id: item.department_id,
-      department: item?.Department?.name,
-      reporting_person_id: sender_id,
-    });
-  };
-
-  const setTransferFields = (item: any) => {
-    setShowTransferModal(true);
-    setDataTransfer({
-      equipment_name: item.name,
-      equipment_id: item.id,
-      from_department_id: item.department_id,
-      from_department_name: item?.Department?.name,
-      create_user_id: sender_id,
-      create_user: current_username,
-    });
-  };
 
   const onPaginationChange = (page: number) => {
     setPage(page);
@@ -259,7 +217,7 @@ const List = () => {
         const { success, message } = res.data;
         if (success) {
           search();
-          toast.success("Xóa thành công!");
+          toast.success('Xóa thành công!');
         } else {
           toast.error(message);
         }
@@ -296,16 +254,16 @@ const List = () => {
 
   const onChangeSelect = (key: string, value: any) => {
     setPage(1);
-    if (key === "status_id") {
+    if (key === 'status_id') {
       setStatus(value);
     }
-    if (key === "type_id") {
+    if (key === 'type_id') {
       setType(value);
     }
-    if (key === "department_id") {
+    if (key === 'department_id') {
       setDepartment(value);
     }
-    if (key === "risk_level") {
+    if (key === 'risk_level') {
       setLevel(value);
     }
     delete searchQuery.page;
@@ -324,7 +282,7 @@ const List = () => {
   };
 
   const onSearch = (value: string) => {
-    console.log("search:", value);
+    console.log('search:', value);
   };
 
   const downloadEquipmentList = async () => {
@@ -354,7 +312,7 @@ const List = () => {
       initial_value: x.initial_value,
       annual_depreciation: x.annual_depreciation,
     }));
-    resolveDataExcel(data, "Danh sách thiết bị", columnTable);
+    resolveDataExcel(data, 'Danh sách thiết bị', columnTable);
     setLoadingDownload(false);
   };
 
@@ -369,7 +327,7 @@ const List = () => {
           />
           <Button
             className="button_excel"
-            onClick={() => navigate("/equipment/import_excel_eq")}
+            onClick={() => navigate('/equipment/import_excel_eq')}
           >
             <ImportOutlined />
             <div className="font-medium text-md text-[#5B69E6]">
@@ -410,7 +368,7 @@ const List = () => {
             showSearch
             placeholder="Tất cả Trạng thái"
             optionFilterProp="children"
-            onChange={(value: any) => onChangeSelect("status_id", value)}
+            onChange={(value: any) => onChangeSelect('status_id', value)}
             onSearch={onSearch}
             allowClear
             filterOption={(input, option) =>
