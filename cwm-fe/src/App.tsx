@@ -99,7 +99,7 @@ const App = () => {
             }
           />
           <Route
-            path="/timekeeping_logs/create_timekeeping_log"
+            path="/timekeeping_logs/create/:date"
             element={
               <PrivateRoute>
                 <CreateTimekeepingLog />
@@ -115,7 +115,7 @@ const App = () => {
             }
           />
           <Route
-            path="/timekeeping_logs/update/:id"
+            path="/timekeeping_logs/update/:date"
             element={
               <PrivateRoute>
                 <UpdateTimekeepingLog />

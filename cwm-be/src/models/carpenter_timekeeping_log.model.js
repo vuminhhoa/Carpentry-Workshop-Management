@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   Carpenter_Timekeeping_Log.init(
     {
       work_number: DataTypes.INTEGER,
+      note: DataTypes.STRING,
     },
     {
       sequelize,

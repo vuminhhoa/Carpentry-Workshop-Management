@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Divider, Row, Pagination } from 'antd';
+import { Divider } from 'antd';
 import './index.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import timekeepingLogApi from 'api/timekeepingLog.api';
-import useQuery from 'hooks/useQuery';
 import type { Moment } from 'moment';
-import type { BadgeProps } from 'antd';
-import { Badge, Calendar } from 'antd';
-import { CalendarMode } from 'antd/lib/calendar/generateCalendar';
+import { Calendar } from 'antd';
 
 const ListTimekeepingLog = () => {
-  const navigate = useNavigate();
   const [timekeeping_logs, setTimekeepingLogs] = useState<any>([]);
 
   const dateCellRender = (value: Moment) => {
@@ -25,9 +21,7 @@ const ListTimekeepingLog = () => {
       return (
         <Link to={`/timekeeping_logs/detail/${date}`}>
           <div>
-            {total_carpenter} thợ
-            <br />
-            {total_timekeeping} công
+            {total_carpenter} thợ, {total_timekeeping} công
             <br />
             {dateData?.note ? 'Ghi chú: ' + dateData?.note : ''}
           </div>
@@ -35,7 +29,7 @@ const ListTimekeepingLog = () => {
       );
     } else {
       return (
-        <Link to={`/timekeeping_logs/detail/${date}`}>
+        <Link to={`/timekeeping_logs/create/${date}`}>
           <div className="text-slate-300">Chưa chấm công</div>
         </Link>
       );

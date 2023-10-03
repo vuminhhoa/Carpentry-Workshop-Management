@@ -3,19 +3,14 @@ import { Layout, Menu, Row, Avatar, Dropdown, Space } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   UserOutlined,
-  SettingOutlined,
   DownOutlined,
-  UnorderedListOutlined,
   UsergroupAddOutlined,
-  BarChartOutlined,
-  FileDoneOutlined,
   SisternodeOutlined,
   ClusterOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import logo from 'assets/logo.png';
 import { useDispatch } from 'react-redux';
 import { authActions } from 'store/slices/auth.slice';
 import ModalChangePassword from 'components/ModalChangePassword';

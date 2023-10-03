@@ -78,7 +78,6 @@ const UpdateEquipment = () => {
 
   const onFinish = (values: any) => {
     const data = { ...values, image };
-    console.log(data);
     setLoadingUpdate(true);
     equipmentApi
       .update(data)

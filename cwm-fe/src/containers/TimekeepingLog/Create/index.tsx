@@ -1,24 +1,87 @@
-import { Button, Divider, Form, Input, Select } from 'antd';
-import { useContext, useState } from 'react';
+import { Button, DatePicker, Divider, Form, Input, Select, Table } from 'antd';
+import { useContext, useEffect, useState } from 'react';
 import ava from 'assets/image.png';
 import { convertBase64, options } from 'utils/globalFunc.util';
 import timekeepingLogApi from 'api/timekeepingLog.api';
 import { toast } from 'react-toastify';
 import { FilterContext } from 'contexts/filter.context';
 import { useNavigate, useParams } from 'react-router-dom';
+import carpenterApi from 'api/carpenter.api';
 
 const { Option } = Select;
 const { TextArea } = Input;
+interface Carpenter {
+  id: number;
+  name: string;
+}
 
+interface Timekeeping_Log {
+  carpenter_id: number | string;
+  work_number: string;
+  note: string;
+}
 const CreateTimekeepingLog = () => {
   const [form] = Form.useForm();
   const [selectedImage, setSelectedImage] = useState<any>('');
   const [image, setImage] = useState<any>('');
+  const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
   const [type, setType] = useState({});
+  const params: any = useParams();
+  const { date } = params;
+
   const [loading, setLoading] = useState<boolean>(false);
   const [dataChange, setDataChange] = useState<any>({});
   const navigate = useNavigate();
-
+  const [note, setNote] = useState<string>('');
+  const [carpenters, setCarpenters] = useState<Carpenter[]>([]);
+  const [timekeepingLogData, setTimekeepingLogData] = useState<
+    Timekeeping_Log[]
+  >([]);
+  const columns = [
+    {
+      title: 'Tên thợ',
+      dataIndex: 'carpenter_id',
+      key: 'carpenter_id',
+      render: (
+        text: number | string,
+        record: Timekeeping_Log,
+        index: number
+      ) => (
+        <Select
+          style={{ width: '100%' }}
+          value={text}
+          onChange={(value: number | string) =>
+            handleCarpenterChange(value, index)
+          }
+        >
+          {carpenters.map((carpenter) => (
+            <Option key={carpenter.id} value={carpenter.id}>
+              {carpenter.name}
+            </Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      title: 'Số công',
+      dataIndex: 'work_number',
+      key: 'work_number',
+      render: (text: string, record: Timekeeping_Log, index: number) => (
+        <Input
+          value={text}
+          onChange={(e) => handleWorkNumberChange(e, index)}
+        />
+      ),
+    },
+    {
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      key: 'note',
+      render: (text: string, record: Timekeeping_Log, index: number) => (
+        <Input value={text} onChange={(e) => handleNoteChange(e, index)} />
+      ),
+    },
+  ];
   const handleChangeImg = async (e: any) => {
     let file = e.target.files[0];
     if (file) {
@@ -54,135 +117,109 @@ const CreateTimekeepingLog = () => {
       .catch()
       .finally(() => setLoading(false));
   };
+  const getCarpenters = () => {
+    setLoading(true);
+    carpenterApi
+      .search({})
+      .then((res: any) => {
+        const { success, data } = res.data;
+        let carpenters = data.carpenters;
+        if (success) {
+          setCarpenters(carpenters);
+        }
+      })
+      .catch()
+      .finally(() => setLoading(false));
+  };
+  useEffect(() => {
+    getCarpenters();
+  }, []);
 
+  const handleNoteChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const updatedAttendanceData = [...timekeepingLogData];
+    updatedAttendanceData[index].note = e.target.value;
+    setTimekeepingLogData(updatedAttendanceData);
+  };
+
+  const handleWorkNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const updatedAttendanceData = [...timekeepingLogData];
+    updatedAttendanceData[index].work_number = e.target.value;
+    setTimekeepingLogData(updatedAttendanceData);
+  };
+
+  const handleCarpenterChange = (value: number | string, index: number) => {
+    const updatedAttendanceData = [...timekeepingLogData];
+    updatedAttendanceData[index].carpenter_id = value;
+    setTimekeepingLogData(updatedAttendanceData);
+  };
+
+  const handleAddRow = () => {
+    setTimekeepingLogData([
+      ...timekeepingLogData,
+      { carpenter_id: '', work_number: '', note: '' },
+    ]);
+  };
+
+  const handleUpdate = () => {
+    const data = {
+      data: {
+        date: date,
+        note: note,
+      },
+      carpenters: timekeepingLogData,
+    };
+    setLoadingUpdate(true);
+    timekeepingLogApi
+      .create(data)
+      .then((res: any) => {
+        const { success } = res.data;
+        if (success) {
+          toast.success('Chấm công thành công');
+        } else {
+          toast.error('Chấm công thất bại');
+        }
+      })
+      .catch()
+      .finally(() => setLoadingUpdate(false));
+    console.log(JSON.stringify(data));
+  };
+  console.log(carpenters);
   return (
     <div>
       <div className="flex-between-center">
-        <div className="title">CHẤM CÔNG</div>
+        <div className="title">CHẤM CÔNG NGÀY {date}</div>
       </div>
 
       <Divider />
-      <div className="flex flex-row gap-6 my-8">
-        <Form
-          form={form}
-          className="basis-3/4"
-          layout="vertical"
-          size="large"
-          onFinish={onFinish}
-          onChange={onchange}
-        >
-          <div className="grid grid-cols-2 gap-5">
-            <Form.Item
-              label="Tên chấm công"
-              name="name"
-              required
-              rules={[{ required: true, message: 'Hãy nhập tên chấm công!' }]}
-              className="mb-5"
-            >
-              <Input
-                placeholder="Nhập tên chấm công"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Mã chấm công"
-              className="mb-5"
-              name="code"
-              required
-              rules={[{ required: true, message: 'Hãy nhập tên chấm công!' }]}
-            >
-              <Input
-                placeholder="Nhập mã chấm công"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-          </div>
-
-          <div className="grid grid-cols-2 gap-5">
-            <Form.Item
-              label="Nước sản suất"
-              name="manufacturing_country"
-              className="mb-5"
-            >
-              <Input
-                placeholder="Nhập nước sản xuất"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-            <Form.Item
-              label="Đơn vị tính "
-              name="unit"
-              className="mb-5"
-              required
-              rules={[{ required: true, message: 'Hãy nhập đơn vị tính!' }]}
-            >
-              <Input
-                placeholder="Nhập đơn vị tính"
-                allowClear
-                className="input"
-              />
-            </Form.Item>
-          </div>
-
-          <div className="grid grid-cols-2 gap-5">
-            <Form.Item
-              label="Số lượng"
-              name="quantity"
-              required
-              rules={[{ required: true, message: 'Hãy nhập số lượng!' }]}
-              className="mb-5"
-            >
-              <Input placeholder="Nhập số lượng" allowClear className="input" />
-            </Form.Item>
-
-            <Form.Item
-              label="Đơn giá"
-              name="unit_price"
-              className="mb-5"
-              required
-              rules={[{ required: true, message: 'Hãy nhập đơn giá!' }]}
-            >
-              <Input placeholder="Nhập đơn giá" allowClear className="input" />
-            </Form.Item>
-          </div>
-
-          <Form.Item>
-            <Button
-              className="button-primary"
-              htmlType="submit"
-              loading={loading}
-            >
-              Thêm
-            </Button>
-          </Form.Item>
-        </Form>
-
-        <div className="flex flex-col gap-4 items-center basis-1/4 ">
-          <div className="text-center leading-9 ">Hình ảnh chấm công</div>
-          {selectedImage === '' ? (
-            <img
-              src={ava}
-              alt="Hình ảnh chấm công"
-              className="w-52 h-52  rounded-lg"
-            />
-          ) : (
-            <div
-              className="w-52 h-52 rounded-lg bg-center bg-no-repeat bg-cover"
-              style={{ backgroundImage: `url(${selectedImage})` }}
-            ></div>
-          )}
-          {/* </label> */}
-          <div className="mt-6">Chọn hình ảnh chấm công</div>
-          <input
-            type="file"
-            className="block file:bg-violet-100 file:text-violet-700 text-slate-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold hover:file:bg-violet-200"
-            id="inputImage"
-            onChange={(e: any) => handleChangeImg(e)}
+      <div className="flex flex-row gap-6 my-8 ">
+        <div className="w-[100%]">
+          <Input
+            placeholder="Ghi chú"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
           />
+          <Button onClick={handleAddRow} className="button-primary">
+            Thêm thợ
+          </Button>
+          <Table
+            columns={columns}
+            dataSource={timekeepingLogData}
+            pagination={false}
+          />
+          <Button
+            onClick={handleUpdate}
+            htmlType="submit"
+            className="button-primary"
+            loading={loadingUpdate}
+          >
+            Chấm công
+          </Button>
         </div>
       </div>
     </div>

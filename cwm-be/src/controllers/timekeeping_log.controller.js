@@ -63,7 +63,7 @@ exports.detail = async (req, res) => {
       include: [
         {
           model: db.Carpenter_Timekeeping_Log,
-          attributes: ["id", "work_number", "carpenter_id"],
+          attributes: ["id", "work_number", "carpenter_id", "note"],
           include: [{ model: db.Carpenter, attributes: ["id", "name"] }],
         },
       ],
@@ -83,6 +83,9 @@ exports.update = async (req, res) => {
         where: { date: data.date },
       });
       if (!isHas) return errorHandler(res, err.TIMEKEEPING_LOG_NOT_FOUND);
+      await db.Timekeeping_Log.update(data, {
+        where: { date: data?.date },
+      });
 
       await db.Carpenter_Timekeeping_Log.destroy(
         {
@@ -134,7 +137,7 @@ exports.search = async (req, res) => {
       include: [
         {
           model: db.Carpenter_Timekeeping_Log,
-          attributes: ["carpenter_id", "work_number"],
+          attributes: ["carpenter_id", "work_number", "note"],
           include: [{ model: db.Carpenter, attributes: ["id", "name"] }],
         },
       ],

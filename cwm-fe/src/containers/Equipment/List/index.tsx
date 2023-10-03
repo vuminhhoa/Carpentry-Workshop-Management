@@ -29,7 +29,6 @@ import useQuery from 'hooks/useQuery';
 import { toast } from 'react-toastify';
 import { FilterContext } from 'contexts/filter.context';
 import {
-  getCurrentUser,
   onChangeCheckbox,
   options,
   resolveDataExcel,
@@ -190,7 +189,6 @@ const List = () => {
   ];
 
   const [columnTable, setColumnTable] = useState<any>(columns);
-  const current_user: any = getCurrentUser();
 
   const onPaginationChange = (page: number) => {
     setPage(page);

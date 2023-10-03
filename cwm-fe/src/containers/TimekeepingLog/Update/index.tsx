@@ -1,107 +1,202 @@
-import { ImportOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Divider, Form, Input, Select, Image } from 'antd';
-import { useContext, useEffect, useState } from 'react';
-import ava from 'assets/image.png';
-import { convertBase64, formatCurrency } from 'utils/globalFunc.util';
+import { Button, Divider, Form, Input, Table, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import supplyApi from 'api/supply.api';
-import { toast } from 'react-toastify';
-import { FilterContext } from 'contexts/filter.context';
-import moment from 'moment';
+import timekeepingLogApi from 'api/timekeepingLog.api';
 import Loading from 'components/Loading';
+import type { FormInstance } from 'antd/es/form';
+import carpenterApi from 'api/carpenter.api';
+import { toast } from 'react-toastify';
+import { DeleteOutlined } from '@ant-design/icons';
 
-const { TextArea } = Input;
+const { Option } = Select;
 
-const UpdateSupply = () => {
-  const options = (array: any) => {
-    return array.map((item: any) => {
-      let o: any = {};
-      o.value = item.id;
-      o.label = item.name;
-      return o;
-    });
-  };
+interface Carpenter {
+  id: number;
+  name: string;
+}
 
-  const navigate = useNavigate();
+interface Attendance {
+  key: string;
+  carpenter_id: number | string;
+  work_number: string;
+  note: string;
+}
+
+const UpdateTimekeepingLog = () => {
   const params: any = useParams();
-  const { id } = params;
+  const { date } = params;
   const [form] = Form.useForm();
-  const [selectedImage, setSelectedImage] = useState<any>('');
   const [image, setImage] = useState<any>('');
   const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [dataChange, setDataChange] = useState<any>({});
-  const [supply, setSupply] = useState<any>({});
-  const [type, setType] = useState({});
+  const [timekeeping_log, setTimekeepingLog] = useState<any>({});
+  const [carpenters, setCarpenters] = useState<any>([]);
+  const [note, setNote] = useState<string>('');
+  const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
+  const [keyCounter, setKeyCounter] = useState<number>(0);
+  const navigate = useNavigate();
 
-  const handleChangeImg = async (e: any) => {
-    let file = e.target.files[0];
-    if (file) {
-      let img = URL.createObjectURL(file);
-      let fileBase64 = await convertBase64(file);
-      setSelectedImage(img);
-      setImage(fileBase64);
-    }
-  };
+  const columns = [
+    {
+      title: 'Tên thợ',
+      dataIndex: 'carpenter_id',
+      key: 'carpenter_id',
+      render: (text: number | string, record: Attendance, index: number) => (
+        <Select
+          style={{ width: '100%' }}
+          value={text}
+          onChange={(value: number | string) =>
+            handleCarpenterChange(value, index)
+          }
+        >
+          {carpenters.map((carpenter: any) => (
+            <Option key={carpenter.id} value={carpenter.id}>
+              {carpenter.name}
+            </Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      title: 'Số công',
+      dataIndex: 'work_number',
+      key: 'work_number',
+      render: (text: string, record: Attendance, index: number) => (
+        <Input
+          value={text}
+          onChange={(e) => handleWorkNumberChange(e, index)}
+        />
+      ),
+    },
+    {
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      key: 'note',
+      render: (text: string, record: Attendance, index: number) => (
+        <Input value={text} onChange={(e) => handleNoteChange(e, index)} />
+      ),
+    },
+    {
+      title: 'Hành động',
+      dataIndex: 'action',
+      key: 'action',
+      render: (text: string, record: Attendance, index: number) => (
+        <DeleteOutlined onClick={() => handleDeleteRow(record.key)} />
+      ),
+    },
+  ];
 
-  const getDetailSupply = (id: any) => {
+  const getDetailTimekeepingLog = (date: any) => {
     setLoading(true);
-    supplyApi
-      .detail(id)
+    timekeepingLogApi
+      .detail(date)
       .then((res: any) => {
         const { success, data } = res.data;
-        let supply = data.supply;
+        let timekeeping_log = data.timekeeping_log;
         if (success) {
-          form.setFieldsValue({
-            id: supply.id,
-            name: supply.name,
-            code: supply.code,
-            status_id: supply.status_id,
-            manufacturing_country: supply.manufacturing_country,
-            unit: supply.unit,
-            unit_price: supply.unit_price,
-            quantity: supply.quantity,
-            image: supply.image,
-          });
-          setSupply(supply);
-          setImage(supply.image);
+          setAttendanceData(
+            timekeeping_log.Carpenter_Timekeeping_Logs.map(
+              (item: any) => ({
+                ...item,
+                key: item.id,
+              })
+            )
+          );
+          setNote(timekeeping_log.note);
+        }
+      })
+      .catch()
+      .finally(() => setLoading(false));
+  };
+  const getCarpenters = () => {
+    setLoading(true);
+    carpenterApi
+      .search({})
+      .then((res: any) => {
+        const { success, data } = res.data;
+        let carpenters = data.carpenters;
+        if (success) {
+          setCarpenters(carpenters);
         }
       })
       .catch()
       .finally(() => setLoading(false));
   };
   useEffect(() => {
-    getDetailSupply(id);
-  }, [id]);
+    getDetailTimekeepingLog(date);
+    getCarpenters();
+  }, [date]);
+  console.log(carpenters);
 
-  const onFinish = (values: any) => {
-    const data = { ...values, image };
+  const handleAddRow = () => {
+    setKeyCounter(keyCounter + 1);
+    const newAttendance: Attendance = {
+      key: keyCounter.toString(),
+      carpenter_id: '',
+      work_number: '',
+      note: '',
+    };
+    setAttendanceData([...attendanceData, newAttendance]);
+  };
+  const handleNoteChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const updatedAttendanceData = [...attendanceData];
+    updatedAttendanceData[index].note = e.target.value;
+    setAttendanceData(updatedAttendanceData);
+  };
+
+  const handleWorkNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const updatedAttendanceData = [...attendanceData];
+    updatedAttendanceData[index].work_number = e.target.value;
+    setAttendanceData(updatedAttendanceData);
+  };
+
+  const handleCarpenterChange = (value: number | string, index: number) => {
+    const updatedAttendanceData = [...attendanceData];
+    updatedAttendanceData[index].carpenter_id = value;
+    setAttendanceData(updatedAttendanceData);
+  };
+  const handleDeleteRow = (key: string) => {
+    const updatedAttendanceData = attendanceData.filter(
+      (item) => item.key !== key
+    );
+    setAttendanceData(updatedAttendanceData);
+  };
+  const handleUpdate = () => {
+    // Gửi dữ liệu cập nhật lên server
+    const data = {
+      data: {
+        date: date,
+        note: note,
+      },
+      carpenters: attendanceData,
+    };
     setLoadingUpdate(true);
-    supplyApi
+    timekeepingLogApi
       .update(data)
       .then((res: any) => {
         const { success } = res.data;
         if (success) {
-          toast.success('Cập nhật vật tư thành công');
-          navigate(`/supplys/detail_supply/${supply.id}`);
+          toast.success('Chấm công thành công');
+          navigate(`/timekeeping_logs/detail/${date}`);
         } else {
-          toast.error('Cập nhật vật tư thất bại');
+          toast.error('Chấm công thất bại');
         }
       })
       .catch()
       .finally(() => setLoadingUpdate(false));
   };
-
-  const onchange = (e: any) => {
-    const newDataChange = { ...dataChange, [e.target.id]: e.target.value };
-    console.log(newDataChange);
-    setDataChange(newDataChange);
-  };
-
+  console.log(attendanceData);
   return (
     <div>
       <div className="flex-between-center">
-        <div className="title">CẬP NHẬT VẬT TƯ</div>
+        <div className="title">CẬP NHẬT CHẤM CÔNG NGÀY {date}</div>
       </div>
 
       <Divider />
@@ -110,135 +205,26 @@ const UpdateSupply = () => {
       ) : (
         // <div className="flex-between mt-10">
         <div className="flex flex-row gap-6 my-8">
-          <Form
-            form={form}
-            className="basis-3/4 "
-            layout="vertical"
-            size="large"
-            onFinish={onFinish}
-            onChange={onchange}
-          >
-            <Form.Item name="id" className="mb-5 hidden ">
-              <Input className="input" />
-            </Form.Item>
-
-            <div className="grid grid-cols-2 gap-5">
-              <Form.Item
-                label="Tên vật tư"
-                name="name"
-                required
-                rules={[{ required: true, message: 'Hãy nhập tên vật tư!' }]}
-                className="mb-5"
-              >
-                <Input
-                  placeholder="Nhập tên vật tư"
-                  allowClear
-                  className="input"
-                />
-              </Form.Item>
-            </div>
-
-            <div className="grid grid-cols-2 gap-5">
-              <Form.Item
-                label="Nước sản xuất"
-                name="manufacturing_country"
-                className="mb-5"
-              >
-                <Input
-                  placeholder="Nhập nước sản xuất"
-                  allowClear
-                  className="input"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Đơn vị tính"
-                name="unit"
-                className="mb-5"
-                required
-                rules={[
-                  { required: true, message: 'Hãy nhập xuất sứ của vật tư!' },
-                ]}
-              >
-                <Input
-                  placeholder="Nhập đơn vị tính"
-                  allowClear
-                  className="input"
-                />
-              </Form.Item>
-            </div>
-
-            <div className="grid grid-cols-2 gap-5">
-              <Form.Item
-                label="Số lượng"
-                name="quantity"
-                className="mb-5"
-                required
-                rules={[
-                  { required: true, message: 'Hãy nhập xuất sứ của vật tư!' },
-                ]}
-              >
-                <Input
-                  placeholder="Nhập số lượng vật tư"
-                  allowClear
-                  className="input"
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="Đơn giá"
-                name="unit_price"
-                required
-                rules={[
-                  { required: true, message: 'Hãy nhập xuất sứ của vật tư!' },
-                ]}
-                className="mb-5"
-              >
-                <Input
-                  placeholder="Nhập xuất sứ của vật tư"
-                  allowClear
-                  className="input"
-                />
-              </Form.Item>
-            </div>
-
-            <Form.Item>
-              <Button
-                htmlType="submit"
-                className="button-primary"
-                loading={loadingUpdate}
-              >
-                Cập nhật
-              </Button>
-            </Form.Item>
-          </Form>
-          <div className="flex flex-col gap-4 items-center basis-1/4 ">
-            <div className="text-center leading-9 ">Hình ảnh vật tư</div>
-
-            {selectedImage === '' ? (
-              <img
-                src={image !== null ? image : ava}
-                alt="Hình ảnh vật tư"
-                className="w-52 h-52  rounded-lg"
-              />
-            ) : (
-              <div
-                className="w-52 h-52 rounded-lg bg-center bg-no-repeat bg-cover"
-                style={{ backgroundImage: `url(${selectedImage})` }}
-              ></div>
-            )}
-            {/* </label> */}
-            <div className="mt-6">Thay đổi hình ảnh vật tư</div>
-            <input
-              type="file"
-              className="block file:bg-violet-100 file:text-violet-700 text-slate-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold hover:file:bg-violet-200"
-              id="inputImage"
-              onChange={(e: any) => handleChangeImg(e)}
+          <div className="w-[100%]">
+            Ghi chú:
+            <Input
+              placeholder="Ghi chú"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
             />
+            Công thợ:
+            <br></br>
+            <Button onClick={handleAddRow}>Thêm thợ</Button>
+            <Table
+              columns={columns}
+              dataSource={attendanceData}
+              pagination={false}
+            />
+            <Button onClick={handleUpdate}>Cập nhật</Button>
           </div>
         </div>
       )}
     </div>
   );
 };
-
-export default UpdateSupply;
+export default UpdateTimekeepingLog;

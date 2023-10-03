@@ -17,6 +17,8 @@ const DetailTimekeepingLog = () => {
   const [timekeeping_log, setTimekeepingLog] = useState<any>([]);
   const [carpenters, setCarpenter] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [note, setNote] = useState<string>('');
+
   const columns: ColumnsType<DataType> = [
     {
       title: 'Tên thợ',
@@ -27,6 +29,10 @@ const DetailTimekeepingLog = () => {
       dataIndex: 'work_number',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.work_number - b.work_number,
+    },
+    {
+      title: 'Ghi chú',
+      render: (item: any) => <div>{item?.note}</div>,
     },
   ];
 
@@ -48,6 +54,7 @@ const DetailTimekeepingLog = () => {
         if (success) {
           setTimekeepingLog(data.timekeeping_log);
           setCarpenter(data.timekeeping_log?.Carpenter_Timekeeping_Logs);
+          setNote(data.timekeeping_log?.note);
         }
       })
       .catch()
@@ -70,7 +77,7 @@ const DetailTimekeepingLog = () => {
           <Button
             className="button_excel"
             onClick={() =>
-              navigate(`/supplies/update_supply/${timekeeping_log.date}`)
+              navigate(`/timekeeping_logs/update/${timekeeping_log.date}`)
             }
           >
             <EditFilled />
@@ -86,6 +93,7 @@ const DetailTimekeepingLog = () => {
       ) : (
         <div id="detail" className="">
           <div className="font-bold text-2xl">{date}</div>
+          {note ? <div>Ghi chú: {note}</div> : ''}
           <Table
             columns={columns}
             dataSource={carpenters}
