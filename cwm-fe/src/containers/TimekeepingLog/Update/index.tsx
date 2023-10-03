@@ -3,17 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import timekeepingLogApi from 'api/timekeepingLog.api';
 import Loading from 'components/Loading';
-import type { FormInstance } from 'antd/es/form';
 import carpenterApi from 'api/carpenter.api';
 import { toast } from 'react-toastify';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
-
-interface Carpenter {
-  id: number;
-  name: string;
-}
 
 interface Attendance {
   key: string;
@@ -25,8 +19,6 @@ interface Attendance {
 const UpdateTimekeepingLog = () => {
   const params: any = useParams();
   const { date } = params;
-  const [form] = Form.useForm();
-  const [image, setImage] = useState<any>('');
   const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [dataChange, setDataChange] = useState<any>({});
@@ -81,7 +73,7 @@ const UpdateTimekeepingLog = () => {
       title: 'Hành động',
       dataIndex: 'action',
       key: 'action',
-      render: (text: string, record: Attendance, index: number) => (
+      render: (text: string, record: Attendance) => (
         <DeleteOutlined onClick={() => handleDeleteRow(record.key)} />
       ),
     },
@@ -96,12 +88,10 @@ const UpdateTimekeepingLog = () => {
         let timekeeping_log = data.timekeeping_log;
         if (success) {
           setAttendanceData(
-            timekeeping_log.Carpenter_Timekeeping_Logs.map(
-              (item: any) => ({
-                ...item,
-                key: item.id,
-              })
-            )
+            timekeeping_log.Carpenter_Timekeeping_Logs.map((item: any) => ({
+              ...item,
+              key: item.id,
+            }))
           );
           setNote(timekeeping_log.note);
         }

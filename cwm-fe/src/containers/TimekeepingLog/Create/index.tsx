@@ -1,15 +1,11 @@
-import { Button, DatePicker, Divider, Form, Input, Select, Table } from 'antd';
-import { useContext, useEffect, useState } from 'react';
-import ava from 'assets/image.png';
-import { convertBase64, options } from 'utils/globalFunc.util';
+import { Button, Divider, Input, Select, Table } from 'antd';
+import { useEffect, useState } from 'react';
 import timekeepingLogApi from 'api/timekeepingLog.api';
 import { toast } from 'react-toastify';
-import { FilterContext } from 'contexts/filter.context';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import carpenterApi from 'api/carpenter.api';
 
 const { Option } = Select;
-const { TextArea } = Input;
 interface Carpenter {
   id: number;
   name: string;
@@ -21,17 +17,11 @@ interface Timekeeping_Log {
   note: string;
 }
 const CreateTimekeepingLog = () => {
-  const [form] = Form.useForm();
-  const [selectedImage, setSelectedImage] = useState<any>('');
-  const [image, setImage] = useState<any>('');
   const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
-  const [type, setType] = useState({});
   const params: any = useParams();
   const { date } = params;
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [dataChange, setDataChange] = useState<any>({});
-  const navigate = useNavigate();
   const [note, setNote] = useState<string>('');
   const [carpenters, setCarpenters] = useState<Carpenter[]>([]);
   const [timekeepingLogData, setTimekeepingLogData] = useState<
@@ -82,41 +72,8 @@ const CreateTimekeepingLog = () => {
       ),
     },
   ];
-  const handleChangeImg = async (e: any) => {
-    let file = e.target.files[0];
-    if (file) {
-      let img = URL.createObjectURL(file);
-      let fileBase64 = await convertBase64(file);
-      setSelectedImage(img);
-      setImage(fileBase64);
-    }
-  };
 
-  const onchange = async (e: any) => {
-    const newDataChange = { ...dataChange, [e.target.id]: e.target.value };
-    setDataChange(newDataChange);
-  };
 
-  const onFinish = (values: any) => {
-    let data = { ...values, image, department_id: 1, status_id: 2 };
-    setLoading(true);
-    timekeepingLogApi
-      .create(data)
-      .then((res: any) => {
-        const { success, message } = res.data;
-        if (success) {
-          toast.success('Thêm mới chấm công thành công!');
-          setImage('');
-          setSelectedImage('');
-          form.resetFields();
-          navigate(`/supplies/list_supplies`);
-        } else {
-          toast.error(message);
-        }
-      })
-      .catch()
-      .finally(() => setLoading(false));
-  };
   const getCarpenters = () => {
     setLoading(true);
     carpenterApi
