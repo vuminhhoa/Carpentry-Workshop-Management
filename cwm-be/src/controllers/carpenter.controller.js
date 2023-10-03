@@ -5,11 +5,17 @@ const { Op } = require("sequelize");
 const { getList } = require("../utils/query.util");
 const cloudinary = require("../utils/cloudinary.util");
 const qr = require("qrcode");
-
+exports.listCarpenterStatuses = async (req, res) => {
+  try {
+    const statuses = await db.Carpenter_Status.findAll({});
+    return successHandler(res, { statuses }, 200);
+  } catch (error) {
+    return errorHandler(res, error);
+  }
+};
 exports.create = async (req, res) => {
   try {
     const data = req?.body;
-    console.log(req.body);
     await db.sequelize.transaction(async (t) => {
       const carpenterInDb = await db.Carpenter.findOne({
         where: {
@@ -48,6 +54,10 @@ exports.detail = async (req, res) => {
     const carpenter = await db.Carpenter.findOne({
       where: { id },
       raw: false,
+      include: {
+        model: db.Carpenter_Status,
+        attributes: ["id", "name"],
+      },
     });
     return successHandler(res, { carpenter }, 200);
   } catch (error) {
@@ -57,7 +67,6 @@ exports.detail = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const data = req?.body;
-    console.log(req.body);
     await db.sequelize.transaction(async (t) => {
       const isHas = await db.Carpenter.findOne({
         where: { id: data?.id },
@@ -102,9 +111,9 @@ exports.delete = async (req, res) => {
 
 exports.search = async (req, res) => {
   try {
-    let { limit, page, name } = req?.query;
+    let { limit, page, name, status_id } = req?.query;
 
-    let filter = {};
+    let filter = { status_id };
 
     if (name) {
       filter = {
@@ -112,7 +121,7 @@ exports.search = async (req, res) => {
         [Op.or]: [{ name: { [Op.like]: `%${name}%` } }],
       };
     }
-    let include = [];
+    let include = [{ model: db.Carpenter_Status, attributes: ["id", "name"] }];
     let carpenters = await getList(+limit, page, filter, "Carpenter", include);
     return successHandler(res, { carpenters, count: carpenters.length }, 200);
   } catch (error) {

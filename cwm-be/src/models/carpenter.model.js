@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       address: DataTypes.STRING, // số lượng
+      image: DataTypes.STRING, // số lượng
       phone: DataTypes.STRING, // nước sản xuất
       gender: DataTypes.STRING, // đơn vị tính nhập chữ
     },

@@ -9,12 +9,6 @@ import Detail from 'containers/Equipment/Detail';
 import ImportOne from 'containers/Equipment/ImportOne';
 import UpdateEquipment from 'containers/Equipment/Update';
 
-import Department from 'containers/Organization/Department';
-import CreateDepartment from 'containers/Organization/Department/create';
-import DetailDepartment from 'containers/Organization/Department/detail';
-import Provider from 'containers/Organization/Provider';
-import CreateProvider from 'containers/Organization/Provider/create';
-import DetailProvider from 'containers/Organization/Provider/detail';
 import User from 'containers/User';
 import CreateUser from 'containers/User/create';
 import DetailUser from 'containers/User/detail';
@@ -23,19 +17,26 @@ import EquipmentStatus from 'containers/Category/Equipment_Status';
 import CreateEquipmentStatus from 'containers/Category/Equipment_Status/create';
 import DetailEquipmentStatus from 'containers/Category/Equipment_Status/detail';
 import ActiveAccount from 'containers/ActiveAccount';
-import SetRole from 'containers/Setting/SetRole';
-import UpdatePermission from 'containers/Setting/SetRole/update';
 
-import Supply from 'containers/Supply';
-import SupplyCreate from 'containers/Supply/create';
-import SupplyImportExcel from 'containers/Supply/ImportExcel';
-import SupplyDetail from 'containers/Supply/detail';
-import ListEqCorresponding from 'containers/Supply/ListEqCorresponding';
 import { ToastContainer } from 'react-toastify';
-import EmailConfig from 'containers/Setting/Symtem/EmailConfig';
 import Profile from 'containers/Profile';
 import ReactGA from 'react-ga';
 import TagManager, { TagManagerArgs } from 'react-gtm-module';
+
+import UpdateCarpenter from 'containers/Carpenter/Update';
+import DetailCarpenter from 'containers/Carpenter/Detail';
+import CreateCarpenter from 'containers/Carpenter/Create';
+import ListCarpenters from 'containers/Carpenter/List';
+
+import CreateSupply from 'containers/Supply/Create';
+import DetailSupply from 'containers/Supply/Detail';
+import ListSupply from 'containers/Supply/List';
+import UpdateSupply from 'containers/Supply/Update';
+
+import CreateTimekeepingLog from 'containers/TimekeepingLog/Create';
+import DetailTimekeepingLog from 'containers/TimekeepingLog/Detail';
+import ListTimekeepingLog from 'containers/TimekeepingLog/List';
+import UpdateTimekeepingLog from 'containers/TimekeepingLog/Update';
 
 const TRACKING_ID = process.env.REACT_APP_TRACKING_ID || '';
 ReactGA.initialize(TRACKING_ID);
@@ -54,6 +55,72 @@ const App = () => {
           <Route
             path="/"
             element={<PrivateRoute>{/* <Dashboard /> */}</PrivateRoute>}
+          />
+          {/* Carpenter Routes */}
+          <Route
+            path="/carpenters/list_carpenters"
+            element={
+              <PrivateRoute>
+                <ListCarpenters />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/carpenters/create_carpenter"
+            element={
+              <PrivateRoute>
+                <CreateCarpenter />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/carpenters/detail_carpenter/:id"
+            element={
+              <PrivateRoute>
+                <DetailCarpenter />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/carpenters/update_carpenter/:id"
+            element={
+              <PrivateRoute>
+                <UpdateCarpenter />
+              </PrivateRoute>
+            }
+          />
+          {/* Timekeeping Log Routes */}
+          <Route
+            path="/timekeeping_logs/list_timekeeping_logs"
+            element={
+              <PrivateRoute>
+                <ListTimekeepingLog />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/timekeeping_logs/create_timekeeping_log"
+            element={
+              <PrivateRoute>
+                <CreateTimekeepingLog />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/timekeeping_logs/detail/:date"
+            element={
+              <PrivateRoute>
+                <DetailTimekeepingLog />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/timekeeping_logs/update/:id"
+            element={
+              <PrivateRoute>
+                <UpdateTimekeepingLog />
+              </PrivateRoute>
+            }
           />
 
           {/* Equipment Routes */}
@@ -103,15 +170,15 @@ const App = () => {
             path="/supplies/list_supplies"
             element={
               <PrivateRoute>
-                <Supply />
+                <ListSupply />
               </PrivateRoute>
             }
           />
           <Route
-            path="/supplies/import_excel_sp"
+            path="/supplies/update_supply/:id"
             element={
               <PrivateRoute>
-                <SupplyImportExcel />
+                <UpdateSupply />
               </PrivateRoute>
             }
           />
@@ -119,7 +186,7 @@ const App = () => {
             path="/supplies/detail_supply/:id"
             element={
               <PrivateRoute>
-                <SupplyDetail />
+                <DetailSupply />
               </PrivateRoute>
             }
           />
@@ -127,65 +194,7 @@ const App = () => {
             path="/supplies/create_supply"
             element={
               <PrivateRoute>
-                <SupplyCreate />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/supplies/list_equipment_corresponding/:id"
-            element={
-              <PrivateRoute>
-                <ListEqCorresponding />
-              </PrivateRoute>
-            }
-          />
-
-          {/* Organization Routes */}
-          <Route
-            path="/organization/department"
-            element={
-              <PrivateRoute>
-                <Department />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/organization/department/create"
-            element={
-              <PrivateRoute>
-                <CreateDepartment />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/organization/department/detail/:id"
-            element={
-              <PrivateRoute>
-                <DetailDepartment />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/organization/provider"
-            element={
-              <PrivateRoute>
-                <Provider />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/organization/provider/create"
-            element={
-              <PrivateRoute>
-                <CreateProvider />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/organization/provider/detail/:id"
-            element={
-              <PrivateRoute>
-                <DetailProvider />
+                <CreateSupply />
               </PrivateRoute>
             }
           />
@@ -252,33 +261,6 @@ const App = () => {
             element={
               <PrivateRoute>
                 <DetailEquipmentStatus />
-              </PrivateRoute>
-            }
-          />
-
-          {/* Setting Routes */}
-          <Route
-            path="/setting/role"
-            element={
-              <PrivateRoute>
-                <SetRole />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/setting/role/update/:role/:id"
-            element={
-              <PrivateRoute>
-                <UpdatePermission />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="/setting/email-config"
-            element={
-              <PrivateRoute>
-                <EmailConfig />
               </PrivateRoute>
             }
           />

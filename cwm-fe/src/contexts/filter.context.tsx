@@ -3,12 +3,14 @@ import filterApi from 'api/filter.api';
 import { ACCESS_TOKEN, CURRENT_USER } from 'constants/auth.constant';
 
 interface FilterContextData {
-  statuses: Array<object>[];
+  equipment_statuses: Array<object>[];
+  carpenter_statuses: Array<object>[];
   user: any;
 }
 
 export const FilterContext = createContext<FilterContextData>({
-  statuses: [],
+  equipment_statuses: [],
+  carpenter_statuses: [],
   user: {},
 });
 
@@ -17,7 +19,8 @@ interface FilterContextProps {
 }
 
 const FilterContextProvider: React.FC<FilterContextProps> = ({ children }) => {
-  const [statuses, setStatuses] = useState([]);
+  const [equipment_statuses, setEquipmentStatuses] = useState([]);
+  const [carpenter_statuses, setCarpenterStatuses] = useState([]);
 
   const access_token: any = localStorage.getItem(ACCESS_TOKEN);
   const user: any = JSON.parse(localStorage.getItem(CURRENT_USER) || '{}');
@@ -25,8 +28,14 @@ const FilterContextProvider: React.FC<FilterContextProps> = ({ children }) => {
   const getAllFilter = async () => {
     await Promise.all([filterApi.getStatusEquipmentApi()])
       .then((res: any) => {
-        const [statuses] = res;
-        setStatuses(statuses?.data?.data?.statuses);
+        const [equipment_statuses] = res;
+        setEquipmentStatuses(equipment_statuses?.data?.data?.statuses);
+      })
+      .catch((error) => console.log('error', error));
+    await Promise.all([filterApi.getCarpenterStatusApi()])
+      .then((res: any) => {
+        const [carpenter_statuses] = res;
+        setCarpenterStatuses(carpenter_statuses?.data?.data?.statuses);
       })
       .catch((error) => console.log('error', error));
   };
@@ -38,10 +47,10 @@ const FilterContextProvider: React.FC<FilterContextProps> = ({ children }) => {
   }, [access_token]);
 
   const FilterContextData = {
-    statuses,
+    equipment_statuses,
+    carpenter_statuses,
     user,
   };
-  console.log(statuses);
   return (
     <FilterContext.Provider value={FilterContextData}>
       {children}

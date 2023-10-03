@@ -28,7 +28,6 @@ import equipmentApi from 'api/equipment.api';
 import useQuery from 'hooks/useQuery';
 import { toast } from 'react-toastify';
 import { FilterContext } from 'contexts/filter.context';
-import { NotificationContext } from 'contexts/notification.context';
 import {
   getCurrentUser,
   onChangeCheckbox,
@@ -52,9 +51,7 @@ const TableFooter = ({ paginationProps }: any) => {
 const List = () => {
   const { onChangeSearch } = useSearchName();
   const navigate = useNavigate();
-  const { increaseCount, getAllNotifications } =
-    useContext(NotificationContext);
-  const { statuses } = useContext(FilterContext);
+  const { equipment_statuses } = useContext(FilterContext);
   const [equipments, setEquipments] = useState<any>([]);
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState<any>({});
@@ -129,11 +126,13 @@ const List = () => {
     },
     {
       title: 'Thành tiền',
-      key: 'amount',
       show: true,
-      dataIndex: 'amount',
       widthExcel: 30,
-      render: (item: number) => <div>{formatCurrency(item)}</div>,
+      render: (item: any) => (
+        <div>
+          {formatCurrency(Number(item.quantity) * Number(item.unit_price))}
+        </div>
+      ),
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,7 +250,6 @@ const List = () => {
   useEffect(() => {
     search();
   }, [nameSearch, status, type, department, level, page, limit]);
-
   const onChangeSelect = (key: string, value: any) => {
     setPage(1);
     if (key === 'status_id') {
@@ -377,7 +375,7 @@ const List = () => {
                 .includes(input.toLowerCase())
             }
             className="select-custom"
-            options={options(statuses)}
+            options={options(equipment_statuses)}
             value={status}
           />
 

@@ -152,7 +152,7 @@ const LayoutSystem = (props: LayoutProps) => {
           <Space>
             {/* <img src={logo} alt="logo" className="logo" /> */}
             <div className="font-medium text-base ">
-              <h2>QUẢN LÝ XƯỞNG MỘC TOÀN HẠNH</h2>
+              <h2>XƯỞNG MỘC TOÀN HẠNH</h2>
             </div>
           </Space>
         </div>

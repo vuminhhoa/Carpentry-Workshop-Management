@@ -13,8 +13,8 @@ import Loading from 'components/Loading';
 const { TextArea } = Input;
 
 const UpdateEquipment = () => {
-  const { statuses } = useContext(FilterContext);
-  console.log(statuses);
+  const { equipment_statuses } = useContext(FilterContext);
+  console.log(equipment_statuses);
   const options = (array: any) => {
     return array.map((item: any) => {
       let o: any = {};
@@ -159,7 +159,7 @@ const UpdateEquipment = () => {
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
-                  options={options(statuses)}
+                  options={options(equipment_statuses)}
                 />
               </Form.Item>
             </div>

@@ -11,7 +11,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const ImportOne = () => {
-  const { statuses } = useContext(FilterContext);
+  const { equipment_statuses } = useContext(FilterContext);
   const [form] = Form.useForm();
   const [selectedImage, setSelectedImage] = useState<any>('');
   const [image, setImage] = useState<any>('');
