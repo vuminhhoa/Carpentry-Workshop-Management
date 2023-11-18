@@ -38,6 +38,11 @@ import DetailTimekeepingLog from 'containers/TimekeepingLog/Detail';
 import ListTimekeepingLog from 'containers/TimekeepingLog/List';
 import UpdateTimekeepingLog from 'containers/TimekeepingLog/Update';
 
+import CreateOrder from 'containers/Order/Create';
+import DetailOrder from 'containers/Order/Detail';
+import ListOrder from 'containers/Order/List';
+import UpdateOrder from 'containers/Order/Update';
+
 const TRACKING_ID = process.env.REACT_APP_TRACKING_ID || '';
 ReactGA.initialize(TRACKING_ID);
 
@@ -119,6 +124,39 @@ const App = () => {
             element={
               <PrivateRoute>
                 <UpdateTimekeepingLog />
+              </PrivateRoute>
+            }
+          />
+          {/* Order Routes */}
+          <Route
+            path="/orders/list"
+            element={
+              <PrivateRoute>
+                <ListOrder />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders/create"
+            element={
+              <PrivateRoute>
+                <CreateOrder />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders/detail/:id"
+            element={
+              <PrivateRoute>
+                <DetailOrder />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders/update/:id"
+            element={
+              <PrivateRoute>
+                <UpdateOrder />
               </PrivateRoute>
             }
           />
