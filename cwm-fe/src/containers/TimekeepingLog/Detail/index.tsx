@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FilePdfFilled, EditFilled } from '@ant-design/icons';
-import { Button, Divider, Table } from 'antd';
+import { FilePdfFilled, EditFilled, DeleteFilled } from '@ant-design/icons';
+import { Button, Divider, Popconfirm, Table, Tooltip } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import timekeepingLogApi from 'api/timekeepingLog.api';
 import Loading from 'components/Loading';
 import type { ColumnsType, TableProps } from 'antd/es/table';
+import { toast } from 'react-toastify';
 interface DataType {
   name: string;
   work_number: number;
@@ -65,6 +66,22 @@ const DetailTimekeepingLog = () => {
     getDetailTimekeepingLog(date);
   }, [date]);
 
+  const handleDelete = (id: number) => {
+    setLoading(true);
+    timekeepingLogApi
+      .delete(id)
+      .then((res: any) => {
+        const { success, message } = res.data;
+        if (success) {
+          toast.success('Xóa thành công!');
+          navigate(`/timekeeping_logs/list_timekeeping_logs`);
+        } else {
+          toast.error(message);
+        }
+      })
+      .catch((error) => toast.error(error))
+      .finally(() => setLoading(false));
+  };
   return (
     <div>
       <div className="flex-between-center">
@@ -74,6 +91,22 @@ const DetailTimekeepingLog = () => {
             <FilePdfFilled />
             <div className="font-medium text-md text-[#5B69E6]">Xuất PDF</div>
           </Button>
+
+          <Popconfirm
+            title="Bạn muốn xóa chấm công này?"
+            onConfirm={() => handleDelete(timekeeping_log.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+            className="flex flex-row "
+          >
+            <Button className="button_excel">
+              <DeleteFilled className="" />
+              <div className="font-medium text-md text-[#5B69E6] ">
+                Xóa chấm công
+              </div>
+            </Button>
+          </Popconfirm>
+
           <Button
             className="button_excel"
             onClick={() =>

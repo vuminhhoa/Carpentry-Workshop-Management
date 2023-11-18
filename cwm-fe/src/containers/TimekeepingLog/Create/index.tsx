@@ -2,7 +2,7 @@ import { Button, Divider, Input, Select, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import timekeepingLogApi from 'api/timekeepingLog.api';
 import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import carpenterApi from 'api/carpenter.api';
 
 const { Option } = Select;
@@ -20,6 +20,7 @@ const CreateTimekeepingLog = () => {
   const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
   const params: any = useParams();
   const { date } = params;
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [note, setNote] = useState<string>('');
@@ -72,7 +73,6 @@ const CreateTimekeepingLog = () => {
       ),
     },
   ];
-
 
   const getCarpenters = () => {
     setLoading(true);
@@ -138,15 +138,14 @@ const CreateTimekeepingLog = () => {
         const { success } = res.data;
         if (success) {
           toast.success('Chấm công thành công');
+          navigate(`/timekeeping_logs/list_timekeeping_logs`);
         } else {
           toast.error('Chấm công thất bại');
         }
       })
       .catch()
       .finally(() => setLoadingUpdate(false));
-    console.log(JSON.stringify(data));
   };
-  console.log(carpenters);
   return (
     <div>
       <div className="flex-between-center">

@@ -27,57 +27,8 @@ const UpdateTimekeepingLog = () => {
   const [note, setNote] = useState<string>('');
   const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
   const [keyCounter, setKeyCounter] = useState<number>(0);
+  const [selectedCarpenters, setSelectedCarpenters] = useState<any>([]); // Danh sách các thợ đã được chọn
   const navigate = useNavigate();
-
-  const columns = [
-    {
-      title: 'Tên thợ',
-      dataIndex: 'carpenter_id',
-      key: 'carpenter_id',
-      render: (text: number | string, record: Attendance, index: number) => (
-        <Select
-          style={{ width: '100%' }}
-          value={text}
-          onChange={(value: number | string) =>
-            handleCarpenterChange(value, index)
-          }
-        >
-          {carpenters.map((carpenter: any) => (
-            <Option key={carpenter.id} value={carpenter.id}>
-              {carpenter.name}
-            </Option>
-          ))}
-        </Select>
-      ),
-    },
-    {
-      title: 'Số công',
-      dataIndex: 'work_number',
-      key: 'work_number',
-      render: (text: string, record: Attendance, index: number) => (
-        <Input
-          value={text}
-          onChange={(e) => handleWorkNumberChange(e, index)}
-        />
-      ),
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      key: 'note',
-      render: (text: string, record: Attendance, index: number) => (
-        <Input value={text} onChange={(e) => handleNoteChange(e, index)} />
-      ),
-    },
-    {
-      title: 'Hành động',
-      dataIndex: 'action',
-      key: 'action',
-      render: (text: string, record: Attendance) => (
-        <DeleteOutlined onClick={() => handleDeleteRow(record.key)} />
-      ),
-    },
-  ];
 
   const getDetailTimekeepingLog = (date: any) => {
     setLoading(true);
@@ -87,6 +38,11 @@ const UpdateTimekeepingLog = () => {
         const { success, data } = res.data;
         let timekeeping_log = data.timekeeping_log;
         if (success) {
+          setSelectedCarpenters(
+            timekeeping_log.Carpenter_Timekeeping_Logs.map(
+              (item: any) => item.Carpenter.name
+            )
+          );
           setAttendanceData(
             timekeeping_log.Carpenter_Timekeeping_Logs.map((item: any) => ({
               ...item,
@@ -118,6 +74,64 @@ const UpdateTimekeepingLog = () => {
     getCarpenters();
   }, [date]);
   console.log(carpenters);
+
+  const columns = [
+    {
+      title: 'Tên thợ',
+      dataIndex: 'carpenter_id',
+      key: 'carpenter_id',
+      render: (text: number | string, record: Attendance, index: number) => (
+        <Select
+          style={{ width: '100%' }}
+          value={text}
+          onChange={(value: number | string) =>
+            handleCarpenterChange(value, index)
+          }
+        >
+          {carpenters
+            .filter((carpenter: any) => {
+              console.log('carpen trong filter: ' + carpenter);
+              return !selectedCarpenters.includes(carpenter.id);
+            })
+            .map((carpenter: any) => {
+              console.log(carpenter.name);
+              return (
+                <Option key={carpenter.id} value={carpenter.id}>
+                  {carpenter.name}
+                </Option>
+              );
+            })}
+        </Select>
+      ),
+    },
+    {
+      title: 'Số công',
+      dataIndex: 'work_number',
+      key: 'work_number',
+      render: (text: string, record: Attendance, index: number) => (
+        <Input
+          value={text}
+          onChange={(e) => handleWorkNumberChange(e, index)}
+        />
+      ),
+    },
+    {
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      key: 'note',
+      render: (text: string, record: Attendance, index: number) => (
+        <Input value={text} onChange={(e) => handleNoteChange(e, index)} />
+      ),
+    },
+    {
+      title: 'Hành động',
+      dataIndex: 'action',
+      key: 'action',
+      render: (text: string, record: Attendance) => (
+        <DeleteOutlined onClick={() => handleDeleteRow(record.key)} />
+      ),
+    },
+  ];
 
   const handleAddRow = () => {
     setKeyCounter(keyCounter + 1);
@@ -151,13 +165,18 @@ const UpdateTimekeepingLog = () => {
     const updatedAttendanceData = [...attendanceData];
     updatedAttendanceData[index].carpenter_id = value;
     setAttendanceData(updatedAttendanceData);
+    // Cập nhật danh sách các thợ đã được chọn
+    const selectedIds = updatedAttendanceData.map((item) => item.carpenter_id);
+    setSelectedCarpenters(selectedIds);
   };
+
   const handleDeleteRow = (key: string) => {
     const updatedAttendanceData = attendanceData.filter(
       (item) => item.key !== key
     );
     setAttendanceData(updatedAttendanceData);
   };
+
   const handleUpdate = () => {
     // Gửi dữ liệu cập nhật lên server
     const data = {
