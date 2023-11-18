@@ -9,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
   Product.init(
     {
       name: DataTypes.STRING,
-      size: DataTypes.DATE,
-      quantity: DataTypes.STRING,
-      unit: DataTypes.INTEGER,
-      unit_price: DataTypes.DATE,
+      size: DataTypes.STRING,
+      quantity: DataTypes.INTEGER,
+      unit: DataTypes.STRING,
+      unit_price: DataTypes.INTEGER,
     },
     {
       sequelize,
