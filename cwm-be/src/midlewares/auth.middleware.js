@@ -19,14 +19,6 @@ const auth = async (req, res, next) => {
       if (!user) return errorHandler(res, err.INVALID_TOKEN);
       req.user = user;
       req.access_token = access_token;
-      // req.isAdmin = () => {
-      //   if (user.role_id === RoleSystem.ADMIN) return true;
-      //   return errorHandler(res, err.ONLY_ADMIN);
-      // };
-      // req.isUser = () => {
-      //   if (user.role_id === RoleSystem.USER) return true;
-      //   return errorHandler(res, err.ONLY_USER);
-      // };
     } else {
       return errorHandler(res, err.INVALID_TOKEN);
     }

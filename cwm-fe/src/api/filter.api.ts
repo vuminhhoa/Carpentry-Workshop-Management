@@ -6,6 +6,10 @@ const filterApi = {
     const url = 'equipment/status/list';
     return axiosClient.get(url);
   },
+  getCarpenterStatusApi(): Promise<CommonResponse> {
+    const url = 'carpenter/status/list';
+    return axiosClient.get(url);
+  },
   getGroupEquipmentApi(): Promise<CommonResponse> {
     const url = 'category/group/list';
     return axiosClient.get(url);

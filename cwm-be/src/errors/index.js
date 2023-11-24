@@ -14,6 +14,14 @@ module.exports.UNKNOWN_ERROR = {
   code: 1002,
   messageCode: "UNKNOWN_ERROR",
 };
+module.exports.ORDER_NOT_FOUND = {
+  status: 400,
+  success: false,
+  data: null,
+  message: "Không tìm thấy đơn hàng trên hệ thống",
+  code: 1002,
+  messageCode: "ORDER_NOT_FOUND",
+};
 module.exports.LOGIN_FAILED = {
   status: 401,
   success: false,

@@ -3,25 +3,21 @@ import { Layout, Menu, Row, Avatar, Dropdown, Space } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   UserOutlined,
-  SettingOutlined,
   DownOutlined,
-  UnorderedListOutlined,
   UsergroupAddOutlined,
-  BarChartOutlined,
-  FileDoneOutlined,
   SisternodeOutlined,
   ClusterOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import logo from 'assets/logo.png';
 import { useDispatch } from 'react-redux';
 import { authActions } from 'store/slices/auth.slice';
 import ModalChangePassword from 'components/ModalChangePassword';
 import { CURRENT_USER } from 'constants/auth.constant';
 import './index.css';
 import userApi from 'api/user.api';
+import logo from '../../assets/logo.png';
 
 const { Header, Sider, Content, Footer } = Layout;
 interface LayoutProps {
@@ -90,13 +86,13 @@ const LayoutSystem = (props: LayoutProps) => {
       ]
     ),
     getItem(
-      'Quản đơn hàng',
+      'Quản lý đơn hàng',
       '/orders',
 
       <UserOutlined style={{ fontSize: '20px' }} />,
       [
-        getItem('Danh sách đơn hàng', '/list_orders'),
-        getItem('Thêm mới đơn hàng', '/create_order'),
+        getItem('Danh sách đơn hàng', '/list'),
+        getItem('Thêm mới đơn hàng', '/create'),
       ]
     ),
     getItem(
@@ -150,9 +146,9 @@ const LayoutSystem = (props: LayoutProps) => {
           onClick={() => navigate('/')}
         >
           <Space>
-            {/* <img src={logo} alt="logo" className="logo" /> */}
+            <img src={logo} alt="logo" className="logo" />
             <div className="font-medium text-base ">
-              <h2>QUẢN LÝ XƯỞNG MỘC TOÀN HẠNH</h2>
+              <h2>XƯỞNG MỘC TOÀN HẠNH</h2>
             </div>
           </Space>
         </div>

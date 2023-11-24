@@ -34,7 +34,7 @@ exports.create = async (req, res) => {
       if (equipmentInDB)
         return errorHandler(res, err.EQUIPMENT_FIELD_DUPLICATED);
       let equipment;
-      const calculateAmount = Number(data.quantity) * Number(data.unit_price);
+
       if (data?.image) {
         const result = await cloudinary.uploader.upload(data?.image, {
           folder: "equipment",
@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
         );
       } else {
         equipment = await db.Equipment.create(
-          { ...data, amount: calculateAmount, status_id: 1 },
+          { ...data, status_id: 1 },
           { transaction: t }
         );
       }
@@ -135,20 +135,17 @@ exports.update = async (req, res) => {
       });
       if (!isHas) return errorHandler(res, err.EQUIPMENT_NOT_FOUND);
 
-      const newAmount =
-        Number(data?.quantity || isHas.quantity) *
-        Number(data?.unit_price || isHas.unit_price);
       if (data?.image) {
         const result = await cloudinary.uploader.upload(data?.image, {
           folder: "equipment",
         });
         await db.Equipment.update(
-          { ...data, image: result?.secure_url, amount: newAmount },
+          { ...data, image: result?.secure_url },
           { where: { id: data?.id }, transaction: t }
         );
       } else {
         await db.Equipment.update(
-          { ...data, amount: newAmount },
+          { ...data },
           {
             where: { id: data?.id },
             transaction: t,

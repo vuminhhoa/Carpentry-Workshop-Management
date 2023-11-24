@@ -11,11 +11,12 @@ module.exports = (sequelize, DataTypes) => {
   Order.init(
     {
       customer: DataTypes.STRING,
-      order_date: DataTypes.DATE, 
-      address: DataTypes.STRING, 
-      advance_payment: DataTypes.INTEGER, 
-      advance_payment_date: DataTypes.DATE, 
-      full_payment_date: DataTypes.INTEGER, 
+      order_date: DataTypes.DATE,
+      address: DataTypes.STRING,
+      phone: DataTypes.STRING,
+      advance_payment: DataTypes.INTEGER,
+      advance_payment_date: DataTypes.DATE,
+      full_payment_date: DataTypes.INTEGER,
     },
     {
       sequelize,

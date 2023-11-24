@@ -35,7 +35,7 @@ const Signin: React.FC = () => {
         <div className='flex flex-col justify-between bg-amber-50'>
           <div className="flex justify-center items-center flex-col pt-24">
             <div className='bg-white p-10 rounded-3xl w-96 shadow-2xl'>
-              <div className='text-center font-medium text-2xl mb-12'>HỆ THỐNG QUẢN LÝ THIẾT BỊ VÀ VẬT TƯ Y TẾ</div>
+              <div className='text-center font-medium text-2xl mb-12'>XƯỞNG MỘC TOÀN HẠNH</div>
               <Form
                 name="signin-form"
                 className="signin-form"

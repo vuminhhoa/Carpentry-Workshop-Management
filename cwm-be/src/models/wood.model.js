@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
       origin: DataTypes.STRING, // nước sản xuất
       unit: DataTypes.STRING, // đơn vị tính nhập chữ
       unit_price: DataTypes.INTEGER, // đơn vị tính nhập chữ
-      amount: DataTypes.INTEGER, // đơn vị tính nhập chữ
     },
     {
       sequelize,

@@ -16,7 +16,7 @@ exports.create = async (req, res) => {
         attributes: ["id", "name"],
       });
       if (woodInDb) return errorHandler(res, err.EQUIPMENT_FIELD_DUPLICATED);
-      const calculateAmount = Number(data.quantity) * Number(data.unit_price);
+
       if (data?.image) {
         const result = await cloudinary.uploader.upload(data?.image, {
           folder: "equipment",
@@ -30,10 +30,7 @@ exports.create = async (req, res) => {
           { transaction: t }
         );
       } else {
-        await db.Wood.create(
-          { ...data, amount: calculateAmount },
-          { transaction: t }
-        );
+        await db.Wood.create({ ...data }, { transaction: t });
       }
 
       return successHandler(res, {}, 201);
@@ -64,20 +61,17 @@ exports.update = async (req, res) => {
       });
       if (!isHas) return errorHandler(res, err.EQUIPMENT_NOT_FOUND);
 
-      const newAmount =
-        Number(data?.quantity || isHas.quantity) *
-        Number(data?.unit_price || isHas.unit_price);
       if (data?.image) {
         const result = await cloudinary.uploader.upload(data?.image, {
           folder: "equipment",
         });
         await db.Wood.update(
-          { ...data, image: result?.secure_url, amount: newAmount },
+          { ...data, image: result?.secure_url },
           { where: { id: data?.id }, transaction: t }
         );
       } else {
         await db.Wood.update(
-          { ...data, amount: newAmount },
+          { ...data },
           {
             where: { id: data?.id },
             transaction: t,

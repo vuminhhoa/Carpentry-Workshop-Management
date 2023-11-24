@@ -9,7 +9,6 @@ const productRoute = require("./product.route");
 const woodRoute = require("./wood.route");
 const timekeepingLogRoute = require("./timekeeping_log.route");
 const providerRoute = require("./provider.route");
-const categoryRoute = require("./category.route");
 const userRoute = require("./user.route");
 const docsRoute = require("./docs.route");
 
@@ -52,11 +51,6 @@ const defaultRoutes = [
   {
     path: "/provider",
     route: providerRoute,
-  },
-
-  {
-    path: "/category",
-    route: categoryRoute,
   },
 
   {

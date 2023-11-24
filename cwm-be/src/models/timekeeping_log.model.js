@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   Timekeeping_Log.init(
     {
       date: DataTypes.DATEONLY,
-      total_carpenter: DataTypes.STRING,
-      total_timekeeping: DataTypes.STRING,
+      note: DataTypes.STRING,
     },
     {
       sequelize,

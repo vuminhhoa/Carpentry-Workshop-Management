@@ -1,20 +1,17 @@
-import { ImportOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Divider, Form, Input, Select, Image } from 'antd';
+import { Button, Divider, Form, Input, Select } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import ava from 'assets/image.png';
-import { convertBase64, formatCurrency } from 'utils/globalFunc.util';
+import { convertBase64 } from 'utils/globalFunc.util';
 import { useNavigate, useParams } from 'react-router-dom';
 import equipmentApi from 'api/equipment.api';
 import { toast } from 'react-toastify';
 import { FilterContext } from 'contexts/filter.context';
-import moment from 'moment';
 import Loading from 'components/Loading';
 
-const { TextArea } = Input;
 
 const UpdateEquipment = () => {
-  const { statuses } = useContext(FilterContext);
-  console.log(statuses);
+  const { equipment_statuses } = useContext(FilterContext);
+  console.log(equipment_statuses);
   const options = (array: any) => {
     return array.map((item: any) => {
       let o: any = {};
@@ -34,7 +31,6 @@ const UpdateEquipment = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [dataChange, setDataChange] = useState<any>({});
   const [equipment, setEquipment] = useState<any>({});
-  const [type, setType] = useState({});
 
   const handleChangeImg = async (e: any) => {
     let file = e.target.files[0];
@@ -78,7 +74,6 @@ const UpdateEquipment = () => {
 
   const onFinish = (values: any) => {
     const data = { ...values, image };
-    console.log(data);
     setLoadingUpdate(true);
     equipmentApi
       .update(data)
@@ -159,7 +154,7 @@ const UpdateEquipment = () => {
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
-                  options={options(statuses)}
+                  options={options(equipment_statuses)}
                 />
               </Form.Item>
             </div>

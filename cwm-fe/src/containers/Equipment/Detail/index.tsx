@@ -88,7 +88,9 @@ const Detail = () => {
         equipment?.unit_price ? formatCurrency(equipment.unit_price) : ''
       }`,
       key_2: 'Thành tiền',
-      value_2: `${equipment?.amount ? formatCurrency(equipment.amount) : ''}`,
+      value_2: `${formatCurrency(
+        Number(equipment.quantity) * Number(equipment.unit_price)
+      )}`,
     },
 
     {
