@@ -61,7 +61,6 @@ exports.detail = async (req, res) => {
           include: [
             {
               model: db.Supply,
-              attributes: ["id", "name", "unit_price"],
             },
           ],
         },
@@ -106,7 +105,7 @@ exports.update = async (req, res) => {
         where: { order_id: data?.id },
       });
       for (const product of products) {
-        await db.Product.create(
+        await db.Product.create( 
           {
             ...product,
             order_id: isHas.id,
