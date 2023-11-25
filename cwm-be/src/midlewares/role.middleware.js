@@ -1,4 +1,3 @@
-const { RoleSystem } = require("../enums");
 const err = require("../errors/index");
 const db = require("../models");
 const { errorHandler } = require("../utils/ResponseHandle");
@@ -17,7 +16,6 @@ const role = (role) => {
 };
 
 module.exports = {
-  isAdmin: role(RoleSystem.ADMIN),
-
-  isUser: role(RoleSystem.USER),
+  // isAdmin: role(RoleSystem.ADMIN),
+  // isUser: role(RoleSystem.USER),
 };
