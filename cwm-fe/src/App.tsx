@@ -13,9 +13,6 @@ import User from 'containers/User';
 import CreateUser from 'containers/User/create';
 import DetailUser from 'containers/User/detail';
 
-import EquipmentStatus from 'containers/Category/Equipment_Status';
-import CreateEquipmentStatus from 'containers/Category/Equipment_Status/create';
-import DetailEquipmentStatus from 'containers/Category/Equipment_Status/detail';
 import ActiveAccount from 'containers/ActiveAccount';
 
 import { ToastContainer } from 'react-toastify';
@@ -276,32 +273,6 @@ const App = () => {
           {/* Category Routes */}
 
           {/* Group */}
-
-          {/* Status */}
-          <Route
-            path="/category/status"
-            element={
-              <PrivateRoute>
-                <EquipmentStatus />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/category/status/create"
-            element={
-              <PrivateRoute>
-                <CreateEquipmentStatus />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/category/status/detail/:id"
-            element={
-              <PrivateRoute>
-                <DetailEquipmentStatus />
-              </PrivateRoute>
-            }
-          />
 
           {/* Auth Routes */}
           <Route path="/signin" element={<Signin />} />

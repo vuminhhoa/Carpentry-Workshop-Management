@@ -18,11 +18,9 @@ import {
 } from 'antd';
 import useDebounce from 'hooks/useDebounce';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import equipmentApi from 'api/equipment.api';
 import useQuery from 'hooks/useQuery';
 import { toast } from 'react-toastify';
-import { checkPermission, onChangeCheckbox } from 'utils/globalFunc.util';
-import { permissions } from 'constants/permission.constant';
+import { onChangeCheckbox } from 'utils/globalFunc.util';
 import type { PaginationProps } from 'antd';
 import orderApi from 'api/order.api';
 import moment from 'moment';

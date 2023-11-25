@@ -1,19 +1,17 @@
-import { Button, Divider, Form, Input, Select } from "antd";
-import userApi from "api/user.api";
-import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { checkPermission, convertBase64, options } from "utils/globalFunc.util";
-import ava from "assets/image.png";
-import { FilterContext } from "contexts/filter.context";
-import { permissions } from "constants/permission.constant";
+import { Button, Divider, Form, Input } from 'antd';
+import userApi from 'api/user.api';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { convertBase64 } from 'utils/globalFunc.util';
+import ava from 'assets/image.png';
 
 const DetailUser = () => {
   const params: any = useParams();
   const { id } = params;
   const [form] = Form.useForm();
-  const [selectedImage, setSelectedImage] = useState<any>("");
-  const [image, setImage] = useState<any>("");
+  const [selectedImage, setSelectedImage] = useState<any>('');
+  const [image, setImage] = useState<any>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleChangeImg = async (e: any) => {
@@ -54,9 +52,9 @@ const DetailUser = () => {
       .then((res) => {
         const { success } = res.data;
         if (success) {
-          toast.success("Cập nhật người dùng thành công!");
+          toast.success('Cập nhật người dùng thành công!');
         } else {
-          toast.error("Cập nhật người dùng thất bại!");
+          toast.error('Cập nhật người dùng thất bại!');
         }
       })
       .catch()
@@ -81,15 +79,15 @@ const DetailUser = () => {
           size="large"
           onFinish={onFinish}
         >
-          <Form.Item name="id" required style={{ display: "none" }}>
-            <Input style={{ display: "none" }} />
+          <Form.Item name="id" required style={{ display: 'none' }}>
+            <Input style={{ display: 'none' }} />
           </Form.Item>
           <div className="grid grid-cols-2 gap-5">
             <Form.Item
               label="Tên người dùng"
               name="name"
               required
-              rules={[{ required: true, message: "Hãy nhập tên người dùng!" }]}
+              rules={[{ required: true, message: 'Hãy nhập tên người dùng!' }]}
               className="mb-5"
             >
               <Input
@@ -104,8 +102,8 @@ const DetailUser = () => {
               className="mb-5"
               required
               rules={[
-                { required: true, message: "Hãy nhập email!" },
-                { type: "email", message: "Nhập đúng định dạng email" },
+                { required: true, message: 'Hãy nhập email!' },
+                { type: 'email', message: 'Nhập đúng định dạng email' },
               ]}
             >
               <Input
@@ -134,13 +132,7 @@ const DetailUser = () => {
             </Form.Item>
           </div>
           <Form.Item>
-            <Button
-              htmlType="submit"
-              loading={loading}
-              className={`button ${
-                checkPermission(permissions.USER_UPDATE) ? "" : "hidden"
-              }`}
-            >
+            <Button htmlType="submit" loading={loading}>
               Cập nhật
             </Button>
           </Form.Item>
@@ -156,7 +148,7 @@ const DetailUser = () => {
               onChange={(e: any) => handleChangeImg(e)}
             />
             <label className="text-center" htmlFor="inputImage">
-              {image === "" ? (
+              {image === '' ? (
                 <img src={ava} alt="ava" className="w-52 h-52" />
               ) : (
                 <div

@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext, FC } from "react";
+import { useEffect, useState, FC } from 'react';
 import {
   DeleteFilled,
   EyeFilled,
   FilterFilled,
   PlusCircleFilled,
   SelectOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
   Button,
   Checkbox,
@@ -14,26 +14,18 @@ import {
   Pagination,
   Popconfirm,
   Row,
-  Select,
   Table,
   Tooltip,
-} from "antd";
-import useDebounce from "hooks/useDebounce";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import image from "assets/image.png";
-import useQuery from "hooks/useQuery";
-import { toast } from "react-toastify";
-import userApi from "api/user.api";
-import {
-  checkPermission,
-  onChangeCheckbox,
-  options,
-  resolveDataExcel,
-} from "utils/globalFunc.util";
-import ExportToExcel from "components/Excel";
-import { FilterContext } from "contexts/filter.context";
-import useSearchName from "hooks/useSearchName";
-import { permissions } from "constants/permission.constant";
+} from 'antd';
+import useDebounce from 'hooks/useDebounce';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import image from 'assets/image.png';
+import useQuery from 'hooks/useQuery';
+import { toast } from 'react-toastify';
+import userApi from 'api/user.api';
+import { onChangeCheckbox, resolveDataExcel } from 'utils/globalFunc.util';
+import ExportToExcel from 'components/Excel';
+import useSearchName from 'hooks/useSearchName';
 
 const limit: number = 10;
 
@@ -52,11 +44,7 @@ interface IUserProps {
   triggerLoading?: Boolean;
 }
 
-const User: FC<IUserProps> = ({
-  department_id,
-  isDepartment = false,
-  triggerLoading = false,
-}) => {
+const User: FC<IUserProps> = ({ triggerLoading = false }) => {
   const { onChangeSearch } = useSearchName();
   const navigate = useNavigate();
   const location = useLocation();
@@ -64,12 +52,8 @@ const User: FC<IUserProps> = ({
   const query = useQuery();
   const currentPage = query?.page;
   const currentName = query?.name;
-  const currentDepartment = query?.department_id;
-  const currentRole = query?.role_id;
   const [searchQuery, setSearchQuery] = useState<any>({});
   let searchQueryString: string;
-  const [department, setDepartment] = useState<any>(currentDepartment);
-  const [role, setRole] = useState<any>(currentRole);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState<number>(currentPage || 1);
   const [total, setTotal] = useState<number>(1);
@@ -83,69 +67,50 @@ const User: FC<IUserProps> = ({
   const [isShowCustomTable, setIsShowCustomTable] = useState<boolean>(false);
   const columns: any = [
     {
-      title: "Ảnh đại diện",
-      key: "image",
+      title: 'Ảnh đại diện',
+      key: 'image',
       show: false,
       widthExcel: 25,
-      render: (item: any) => (
-        <img src={image} alt="logo" className="w-20 h-20" />
-      ),
+      render: () => <img src={image} alt="logo" className="w-20 h-20" />,
     },
     {
-      title: "Tên hiển thị",
-      dataIndex: "name",
-      key: "name",
+      title: 'Tên hiển thị',
+      dataIndex: 'name',
+      key: 'name',
       show: true,
       widthExcel: 25,
     },
     {
-      title: "Email",
-      key: "email",
-      dataIndex: "email",
+      title: 'Email',
+      key: 'email',
+      dataIndex: 'email',
       show: true,
       widthExcel: 30,
     },
     {
-      title: "Số điện thoại",
-      key: "phone",
-      dataIndex: "phone",
+      title: 'Số điện thoại',
+      key: 'phone',
+      dataIndex: 'phone',
       show: true,
       widthExcel: 20,
     },
     {
-      title: "Địa chỉ",
-      key: "address",
-      dataIndex: "address",
+      title: 'Địa chỉ',
+      key: 'address',
+      dataIndex: 'address',
       show: true,
       widthExcel: 25,
     },
+
     {
-      title: "Chức vụ",
-      key: "role_id",
-      show: true,
-      widthExcel: 25,
-      render: (item: any) => <>{item?.Role?.name}</>,
-    },
-    {
-      title: "Khoa phòng",
-      key: "department_id",
-      show: true,
-      widthExcel: 30,
-      render: (item: any) => <>{item?.Department?.name}</>,
-    },
-    {
-      title: "Tác vụ",
-      key: "action",
+      title: 'Tác vụ',
+      key: 'action',
       show: true,
       render: (item: any) => (
         <div>
           <Tooltip title="Chi tiết người dùng" className="mr-4">
             <Link to={`/user/detail/${item.id}`}>
-              <EyeFilled
-                className={
-                  checkPermission(permissions.USER_READ) ? "" : "hidden"
-                }
-              />
+              <EyeFilled />
             </Link>
           </Tooltip>
           <Tooltip title="Xóa">
@@ -155,11 +120,7 @@ const User: FC<IUserProps> = ({
               okText="Xóa"
               cancelText="Hủy"
             >
-              <DeleteFilled
-                className={
-                  checkPermission(permissions.USER_DELETE) ? "" : "hidden"
-                }
-              />
+              <DeleteFilled />
             </Popconfirm>
           </Tooltip>
         </div>
@@ -174,7 +135,7 @@ const User: FC<IUserProps> = ({
       .then((res: any) => {
         const { success, message } = res.data;
         if (success) {
-          toast.success("Xóa thành công!");
+          toast.success('Xóa thành công!');
           searchUsers();
         } else {
           toast.error(message);
@@ -205,8 +166,6 @@ const User: FC<IUserProps> = ({
       .search({
         keyword: name,
         page,
-        role_id: role,
-        department_id: department_id || department,
       })
       .then((res: any) => {
         const { success, data } = res.data;
@@ -221,69 +180,41 @@ const User: FC<IUserProps> = ({
 
   useEffect(() => {
     searchUsers();
-  }, [nameSearch, page, role, department, triggerLoading]);
-
-  const onChangeSelect = (key: string, value: any) => {
-    if (key === "department_id") {
-      setDepartment(value);
-    }
-    if (key === "role_id") {
-      setRole(value);
-    }
-    let newSearchQuery: any = { ...searchQuery, [`${key}`]: value };
-    setSearchQuery(newSearchQuery);
-    if (newSearchQuery[`${key}`] === undefined) {
-      delete newSearchQuery[`${key}`];
-    }
-    searchQueryString = new URLSearchParams(newSearchQuery).toString();
-    if (Object.keys(newSearchQuery)?.length !== 0) {
-      navigate(`${pathName}?page=${page}&${searchQueryString}`);
-    } else {
-      setPage(1);
-      navigate(`${pathName}?page=1`);
-    }
-  };
+  }, [nameSearch, page, triggerLoading]);
 
   const downloadUserList = async () => {
     setLoadingDownload(true);
     const res = await userApi.search({
       keyword: name,
-      role_id: role,
-      department_id: department_id || department,
     });
     const { users } = res?.data?.data;
     const data = users.map((x: any) => ({
       name: x.name,
       email: x.email,
-      phone: x.phone || "",
-      address: x.address || "",
+      phone: x.phone || '',
+      address: x.address || '',
       role_id: x.Role?.name,
-      department_id: x.Department?.name || "",
+      department_id: x.Department?.name || '',
     }));
-    resolveDataExcel(data, "Danh sách người dùng", columnTable);
+    resolveDataExcel(data, 'Danh sách người dùng', columnTable);
     setLoadingDownload(false);
   };
 
   return (
     <div>
       <div className="flex-between-center">
-        <div className="title">
-          {isDepartment ? "Danh sách thành viên" : "DANH SÁCH NGƯỜI DÙNG"}
-        </div>
         <div className="flex flex-row gap-6">
           <ExportToExcel
             callback={downloadUserList}
             loading={loadingDownload}
           />
-          {checkPermission(permissions.USER_CREATE) && (
-            <Button
-              className="button_excel"
-              onClick={() => navigate("/user/create_user")}
-            >
-              <PlusCircleFilled />
-              <div className="font-medium text-md text-[#5B69E6]">Thêm mới</div>
-            </Button>
-          )}
+          <Button
+            className="button_excel"
+            onClick={() => navigate('/user/create_user')}
+          >
+            <PlusCircleFilled />
+            <div className="font-medium text-md text-[#5B69E6]">Thêm mới</div>
+          </Button>
         </div>
       </div>
       <Divider />
