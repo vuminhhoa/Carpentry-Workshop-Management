@@ -1,8 +1,6 @@
 import { CURRENT_USER } from 'constants/auth.constant';
 import * as fs from 'file-saver';
 import ExcelJS from 'exceljs';
-import { action } from 'constants/keyCode.constant';
-import { report_status } from 'constants/dataFake.constant';
 
 const convertBase64 = (file: File) => {
   return new Promise((resolve, reject) => {
@@ -204,56 +202,12 @@ const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem(CURRENT_USER) || '');
 };
 
-const checkRoleFromData = () => {
-  const current_user: any = getCurrentUser();
-  const current_role = current_user?.role_id;
-  const roles = [1, 3, 7, 8];
-  const isHasRole: boolean = roles.includes(current_role);
-  return isHasRole;
-};
-
-const checkPermission = (permission: number) => {
-  const current_user: any = getCurrentUser();
-  const permissions = current_user?.Role?.Role_Permissions;
-  return permissions?.find((item: any) => item.permission_id === permission);
-};
-
-// const formatCurrency = (amount: any) => {
-//   return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-// };
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
   }).format(value);
-};
-
-const handleUrlInNotification = (item: any) => {
-  let url: string = '';
-  if (item?.content?.includes(action.HANDOVER)) {
-    url = `/equipment/detail/${item.equipment_id}`;
-  }
-  if (item?.content?.includes(action.BROKEN)) {
-    url = `/equipment/repair/broken_report/${item.equipment_id}/${item.report_id}`;
-  }
-  if (item?.content?.includes(action.REPAIR)) {
-    url = `/equipment/repair/update_schedule/${item.equipment_id}/${item.report_id}`;
-  }
-  if (item?.content?.includes(action.INSPECTION)) {
-    url = `/equipment/inspection/detail/${item.equipment_id}/${item.report_id}`;
-  }
-  if (item?.content?.includes(action.TRANSFER)) {
-    url = `/equipment/transfer/detail/${item.equipment_id}/${item.report_id}`;
-  }
-  if (item?.content?.includes(action.LIQUIDATION)) {
-    url = `/equipment/liquidation/detail/${item.equipment_id}/${item.report_id}`;
-  }
-  return url;
-};
-
-const handleReportStatus = (status: any) => {
-  return report_status.filter((item: any) => item.value === status)[0]?.label;
 };
 
 export {
@@ -268,9 +222,5 @@ export {
   resolveDataExcel,
   onChangeCheckbox,
   getCurrentUser,
-  checkRoleFromData,
-  checkPermission,
   formatCurrency,
-  handleUrlInNotification,
-  handleReportStatus,
 };

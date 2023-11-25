@@ -7,8 +7,7 @@ import type { ColumnsType } from 'antd/es/table';
 import equipmentApi from 'api/equipment.api';
 import moment from 'moment';
 import Loading from 'components/Loading';
-import { formatCurrency, checkPermission } from 'utils/globalFunc.util';
-import { permissions } from 'constants/permission.constant';
+import { formatCurrency } from 'utils/globalFunc.util';
 interface DataType {
   key_1: string;
   value_1: string;
